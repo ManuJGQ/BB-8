@@ -14,4 +14,142 @@
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="Pag3DElement.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="Pag3DGroup.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="Pag3DObject.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="PagAssistantClass.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="PagCamera.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="PagLight.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="PagRenderer.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="PagRevolutionObject.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="PagShaderProgram.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="PagSubdivisionProfile.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="PagTable.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="PagTexture.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Pag3DElement.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="Pag3DGroup.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="Pag3DObject.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="PagAssistantClass.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="PagCamera.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="PagLight.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="PagRenderer.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="PagRevolutionObject.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="PagShaderProgram.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="PagSubdivisionProfile.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="PagTable.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="PagTexture.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="Structs.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ADS-D.frag">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="ADS-D.vert">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="ADS-P.frag">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="ADS-P.vert">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="ADS-S.frag">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="ADS-S.vert">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="points.frag">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="points.vert">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="pointsMultiColor.frag">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="pointsMultiColor.vert">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="Test.frag">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="Test.vert">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="Texture-D.frag">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="Texture-D.vert">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="Texture-P.frag">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="Texture-P.vert">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="Texture-S.frag">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="Texture-S.vert">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+  </ItemGroup>
 </Project>
