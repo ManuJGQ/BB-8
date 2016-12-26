@@ -3,6 +3,9 @@
 #include <fstream>
 #include <string>
 
+#include <iostream>
+#include <windows.h>
+
 #define Epsilon 0.000001
 
 /**
@@ -121,8 +124,9 @@ void PagAssistantClass::devolverDatos(const PagRevolutionObject &orig) {
 
 	char* docdir = getenv("userprofile");
 	std::string path = docdir;
-	path += "/Desktop/Geometry/";
-	path += nombreAlumno;
+	path += "/Desktop/Geometry";
+	CreateDirectory(path.c_str(), NULL);
+	path += "/" + nombreAlumno;
 	std::string nombreFichero;
 
 	//ARCHIVO GEOMETRIA
