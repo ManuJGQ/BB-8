@@ -29,7 +29,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	if (key == GLFW_KEY_O && action == GLFW_REPEAT) {
 		camera.setOrbit(true);
 		camera.movOrbit();
-		
+
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		glm::mat4 ViewMatrix = camera.getViewMatrix();
@@ -100,7 +100,7 @@ int main(int argc, char** argv) {
 	glfwSetScrollCallback(window, scroll);
 	glfwSetKeyCallback(window, key_callback);
 
-	
+
 	escena.cargarEscena();
 	glfwShowWindow(window);
 

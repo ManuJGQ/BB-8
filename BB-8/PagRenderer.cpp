@@ -12,13 +12,33 @@
 #include <GLFW/glfw3.h>
 #include "gtc\matrix_transform.hpp"
 
-bool has_suffix(const std::string &str, const std::string &suffix){
+bool has_suffix(const std::string &str, const std::string &suffix) {
 	return str.size() >= suffix.size() &&
 		str.compare(str.size() - suffix.size(), suffix.size(), suffix) == 0;
 }
 
 PagRenderer::PagRenderer() {
-	
+
+	//char* docdir = getenv("userprofile");
+	//std::string path = docdir;
+	//path += "/Desktop/";
+	//std::string nombreFichero;
+
+	////ARCHIVO GEOMETRIA
+
+	//nombreFichero = path;
+	//nombreFichero += "b-in.txt";
+	//std::ofstream ficheroGeom;
+	//ficheroGeom.open(nombreFichero);
+	//ficheroGeom << 42 << "," << 0 << std::endl;
+	//for (float i = 0; i <= 20; i += 0.5) {
+	//	ficheroGeom << i << "," << -1 * sqrt((20 + i)*(20 - i)) << std::endl;
+	//}
+	//for (float i = 20; i >= 0; i -= 0.5) {
+	//	ficheroGeom << i << "," <<  sqrt((20 + i)*(20 - i)) << std::endl;
+	//}
+	//ficheroGeom.close();
+
 	// Leemos los datos y txt del usuario
 	int perfiles;
 	std::cout << "Introduce el numero de perfiles" << std::endl;
@@ -62,9 +82,9 @@ PagRenderer::PagRenderer() {
 
 void PagRenderer::cargarEscena() {
 	//Cargamos las luces
-	lights.push_back(PagLight(glm::vec3(-30.0,30.0,-50.0), glm::vec3(0.46, -0.46, 0.75), 0.2f, 0.5f, 0.3f, glm::vec3(0.85, 0.65, 0.12), glm::vec3(1.0, 1.0, 1.0), glm::vec3(1.0, 1.0, 1.0), 20.0f, 5.0f, 50.0f));
-	lights.push_back(PagLight(glm::vec3(-0.28, 0.0, 0.92), 0.1f, 0.25f, 0.15f, glm::vec3(0.85, 0.65, 0.12), glm::vec3(1.0, 1.0, 1.0), glm::vec3(1.0, 1.0, 1.0), 'D', 50.0f));
-	lights.push_back(PagLight(glm::vec3(-15.0, 15.0, 50.0), 0.05f, 0.125f, 0.75f, glm::vec3(0.85, 0.65, 0.12), glm::vec3(1.0, 1.0, 1.0), glm::vec3(1.0, 1.0, 1.0), 'P', 50.0f));
+	lights.push_back(PagLight(glm::vec3(0.0, 80.0, 0.0), 0.2f, 0.5f, 0.3f, glm::vec3(1.0, 1.0, 1.0), glm::vec3(1.0, 1.0, 1.0), glm::vec3(1.0, 1.0, 1.0), 'P', 50.0f));
+	lights.push_back(PagLight(glm::vec3(-60.0, 0.0, 60.0), 0.1f, 0.25f, 0.15f, glm::vec3(1.0, 1.0, 1.0), glm::vec3(1.0, 1.0, 1.0), glm::vec3(1.0, 1.0, 1.0), 'P', 50.0f));
+	lights.push_back(PagLight(glm::vec3(-60.0, 60.0, 100.0), 0.05f, 0.125f, 0.75f, glm::vec3(1.0, 1.0, 1.0), glm::vec3(1.0, 1.0, 1.0), glm::vec3(1.0, 1.0, 1.0), 'P', 50.0f));
 
 	//Creamos las Geometrias y Topologias de los diferentes objetos que componen la escena
 	objects.createObject();
@@ -73,9 +93,9 @@ void PagRenderer::cargarEscena() {
 	DIR *dir = opendir("Textures/");
 
 	dirent *entry;
-	while ((entry = readdir(dir)) != nullptr){
-		if (has_suffix(entry->d_name, ".png")){
-		
+	while ((entry = readdir(dir)) != nullptr) {
+		if (has_suffix(entry->d_name, ".png")) {
+
 			std::string name = std::string(entry->d_name);
 			int ind = name.find_last_of(".");
 			std::string nombreSinExt = name.substr(0, ind);
@@ -118,7 +138,7 @@ void PagRenderer::cargarEscena() {
 				shader->createShaderProgram(name.c_str());
 
 				shaders.insert_or_assign(name, shader);
-				
+
 				if (shadersNames.find(name2) == shadersNames.end()) {
 					nombreShaders.push_back(name2);
 					std::cout << "[" << nombreShaders.size() - 1 << "] - " << name2 << std::endl;
@@ -139,11 +159,11 @@ void PagRenderer::cargarEscena() {
 }
 
 void PagRenderer::pintarEscena(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix) {
-	for(int i=0;i<lights.size();i++) {
+	for (int i = 0; i < lights.size(); i++) {
 		objects.draw(ViewMatrix, ProjectionMatrix, this, &lights[i]);
 	}
 }
 
-PagRenderer::~PagRenderer(){
+PagRenderer::~PagRenderer() {
 	delete[] ficheros;
 }

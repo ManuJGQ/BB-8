@@ -137,6 +137,7 @@
     <ClCompile Include="PagAssistantClass.cpp" />
     <ClCompile Include="PagCamera.cpp" />
     <ClCompile Include="PagLight.cpp" />
+    <ClCompile Include="PagMaterial.cpp" />
     <ClCompile Include="PagRenderer.cpp" />
     <ClCompile Include="PagRevolutionObject.cpp" />
     <ClCompile Include="PagShaderProgram.cpp" />
@@ -151,6 +152,7 @@
     <ClInclude Include="PagAssistantClass.h" />
     <ClInclude Include="PagCamera.h" />
     <ClInclude Include="PagLight.h" />
+    <ClInclude Include="PagMaterial.h" />
     <ClInclude Include="PagRenderer.h" />
     <ClInclude Include="PagRevolutionObject.h" />
     <ClInclude Include="PagShaderProgram.h" />
