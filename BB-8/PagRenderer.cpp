@@ -27,22 +27,22 @@ PagRenderer::PagRenderer() {
 	////ARCHIVO GEOMETRIA
 
 	//nombreFichero = path;
-	//nombreFichero += "b-in.txt";
+	//nombreFichero += "b3-in.txt";
 	//std::ofstream ficheroGeom;
 	//ficheroGeom.open(nombreFichero);
-	//ficheroGeom << 42 << "," << 0 << std::endl;
-	//for (float i = 0; i <= 20; i += 0.5) {
-	//	ficheroGeom << i << "," << -1 * sqrt((20 + i)*(20 - i)) << std::endl;
-	//}
-	//for (float i = 20; i >= 0; i -= 0.5) {
-	//	ficheroGeom << i << "," <<  sqrt((20 + i)*(20 - i)) << std::endl;
+	//ficheroGeom << 13 << "," << 0 << std::endl;
+	////for (float i = 0; i <= 12; i += 0.5) {
+	////	ficheroGeom << i << "," << -1 * sqrt((12 + i)*(12 - i)) << std::endl;
+	////}
+	//for (float i = 12; i >= 0; i -= 0.5) {
+	//	ficheroGeom << i << "," <<  40 + sqrt((12 + i)*(12 - i)) << std::endl;
 	//}
 	//ficheroGeom.close();
 
 	// Leemos los datos y txt del usuario
-	int perfiles;
-	std::cout << "Introduce el numero de perfiles" << std::endl;
-	std::cin >> perfiles;
+	int perfiles = 4;
+	/*std::cout << "Introduce el numero de perfiles" << std::endl;
+	std::cin >> perfiles;*/
 
 	ficheros = new Structs::Fichero[perfiles];
 
@@ -52,13 +52,22 @@ PagRenderer::PagRenderer() {
 		std::string path = docdir;
 		std::string archivo;
 		path += "/Desktop/";
-		std::cout << "Escriba el nombre del fichero " << perfiles - j + 1 << " (con .txt)" << std::endl;
-		std::cin >> archivo;
+		if (j == 1)archivo = "b-in.txt";
+		if (j == 2)archivo = "b2-in.txt";
+		if (j == 3)archivo = "b3-in.txt";
+		if (j == 4)archivo = "b4-in.txt";
+		/*std::cout << "Escriba el nombre del fichero " << perfiles - j + 1 << " (con .txt)" << std::endl;
+		std::cin >> archivo;*/
 		path += archivo;
 
 		std::string _nTextura;
-		std::cout << "Escriba la textura para " << archivo << " (sin .png)" << std::endl;
-		std::cin >> _nTextura;
+		/*std::cout << "Escriba la textura para " << archivo << " (sin .png)" << std::endl;
+		std::cin >> _nTextura;*/
+
+		if (j == 1)_nTextura = "bb8";
+		if (j == 2)_nTextura = "bb8-c2";
+		if (j == 3)_nTextura = "bb8-ca";
+		if (j == 4)_nTextura = "bb8-ca-top";
 
 		Structs::Fichero _fichero;
 		_fichero.nombreAlumno = archivo;
@@ -68,9 +77,9 @@ PagRenderer::PagRenderer() {
 		j--;
 	}
 
-	int slices;
-	std::cout << "Escriba el numero de slices" << std::endl;
-	std::cin >> slices;
+	int slices = 100;
+	/*std::cout << "Escriba el numero de slices" << std::endl;
+	std::cin >> slices;*/
 
 	for (int i = 0; i < perfiles; i++) {
 		ficheros[i].numSlices = slices;
@@ -82,9 +91,11 @@ PagRenderer::PagRenderer() {
 
 void PagRenderer::cargarEscena() {
 	//Cargamos las luces
-	lights.push_back(PagLight(glm::vec3(0.0, 80.0, 0.0), 0.2f, 0.5f, 0.3f, glm::vec3(1.0, 1.0, 1.0), glm::vec3(1.0, 1.0, 1.0), glm::vec3(1.0, 1.0, 1.0), 'P', 50.0f));
-	lights.push_back(PagLight(glm::vec3(-60.0, 0.0, 60.0), 0.1f, 0.25f, 0.15f, glm::vec3(1.0, 1.0, 1.0), glm::vec3(1.0, 1.0, 1.0), glm::vec3(1.0, 1.0, 1.0), 'P', 50.0f));
-	lights.push_back(PagLight(glm::vec3(-60.0, 60.0, 100.0), 0.05f, 0.125f, 0.75f, glm::vec3(1.0, 1.0, 1.0), glm::vec3(1.0, 1.0, 1.0), glm::vec3(1.0, 1.0, 1.0), 'P', 50.0f));
+	lights.push_back(PagLight(glm::vec3(0.0, 50.0, 0.0), 1.0f, 1.0f, 1.0f, glm::vec3(1.0, 1.0, 1.0), glm::vec3(1.0, 1.0, 1.0), glm::vec3(1.0, 1.0, 1.0), 'P', 50.0f));
+	lights.push_back(PagLight(glm::vec3(0.0, 20.0, -80.0), 0.2f, 0.5f, 0.3f, glm::vec3(1.0, 1.0, 1.0), glm::vec3(1.0, 1.0, 1.0), glm::vec3(1.0, 1.0, 1.0), 'P', 50.0f));
+	lights.push_back(PagLight(glm::vec3(80.0, 20.0, 0.0), 0.2f, 0.5f, 0.3f, glm::vec3(1.0, 1.0, 1.0), glm::vec3(1.0, 1.0, 1.0), glm::vec3(1.0, 1.0, 1.0), 'P', 50.0f));
+	lights.push_back(PagLight(glm::vec3(-80.0, 20.0, 0.0), 0.2f, 0.5f, 0.3f, glm::vec3(1.0, 1.0, 1.0), glm::vec3(1.0, 1.0, 1.0), glm::vec3(1.0, 1.0, 1.0), 'P', 50.0f));
+	lights.push_back(PagLight(glm::vec3(0.0, 20.0, 80.0), 0.2f, 0.5f, 0.3f, glm::vec3(1.0, 1.0, 1.0), glm::vec3(1.0, 1.0, 1.0), glm::vec3(1.0, 1.0, 1.0), 'P', 50.0f));
 
 	//Creamos las Geometrias y Topologias de los diferentes objetos que componen la escena
 	objects.createObject();
