@@ -49,6 +49,7 @@ void PagCamera::mover(double movX, double movY) {
 			xtemp = xtemp / 16;
 			mouseX = movX;
 			xLookAt += xtemp;
+			zLookAt -= xtemp;
 			double ytemp = mouseY - movY;
 			ytemp = ytemp / 16;
 			yLookAt += ytemp;
@@ -67,11 +68,13 @@ void PagCamera::mover(double movX, double movY) {
 			x += xtemp;
 			mouseX = movX;
 			xLookAt += xtemp;
+			zLookAt -= xtemp;
 			double ytemp = mouseY - movY;
 			ytemp = ytemp / 16;
 			y += ytemp;
 			yLookAt += ytemp;
 			mouseY = movY;
+			std::cout << xLookAt << " - " << yLookAt << " - " << zLookAt << std::endl;
 		}
 		ViewMatrix = glm::lookAt(glm::vec3(x, y, z),
 			glm::vec3(xLookAt, yLookAt, zLookAt), glm::vec3(0.0, 1.0, 0.0));
