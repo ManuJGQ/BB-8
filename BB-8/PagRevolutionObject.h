@@ -69,7 +69,7 @@ public:
 	void draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix, PagRenderer* renderer, PagLight* light) override;
 
 
-	//Metodos Gets
+	//Metodos Gets & Set
 
 	Geometria& getGeometria() const { return *geometria; }
 	Geometria& getGeometriaBottomTape() const { return *geometriaBottomTape; }
@@ -91,6 +91,8 @@ public:
 	bool getFlagTopTape() const { return flagTopTape; }
 
 	std::string getNombreAlumno() const { return nombreAlumno; }
+
+	void setModelMatrix(glm::mat4 _ModelMatrix) { ModelMatrix *= _ModelMatrix; }
 
 	~PagRevolutionObject();
 };

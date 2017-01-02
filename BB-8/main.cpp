@@ -104,7 +104,7 @@ int main(int argc, char** argv) {
 	escena.cargarEscena();
 	glfwShowWindow(window);
 
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	glEnable(GL_PROGRAM_POINT_SIZE);
 	glViewport(0, 0, 1024, 768);
 

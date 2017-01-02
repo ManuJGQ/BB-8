@@ -11,6 +11,7 @@
 #include <GL/glew.h> //glew SIEMPRE va antes del glfw
 #include <GLFW/glfw3.h>
 #include "gtc\matrix_transform.hpp"
+#include <filesystem>
 
 bool has_suffix(const std::string &str, const std::string &suffix) {
 	return str.size() >= suffix.size() &&
@@ -40,7 +41,7 @@ PagRenderer::PagRenderer() {
 	//ficheroGeom.close();
 
 	// Leemos los datos y txt del usuario
-	int perfiles = 4;
+	int perfiles = 5;
 	/*std::cout << "Introduce el numero de perfiles" << std::endl;
 	std::cin >> perfiles;*/
 
@@ -48,17 +49,14 @@ PagRenderer::PagRenderer() {
 
 	int j = perfiles;
 	while (j != 0) {
-		char* docdir = getenv("userprofile");
-		std::string path = docdir;
 		std::string archivo;
-		path += "/Desktop/";
-		if (j == 1)archivo = "b-in.txt";
+		if (j == 1)archivo = "b1-in.txt";
 		if (j == 2)archivo = "b2-in.txt";
 		if (j == 3)archivo = "b3-in.txt";
 		if (j == 4)archivo = "b4-in.txt";
+		if (j == 5)archivo = "b5-in.txt";
 		/*std::cout << "Escriba el nombre del fichero " << perfiles - j + 1 << " (con .txt)" << std::endl;
 		std::cin >> archivo;*/
-		path += archivo;
 
 		std::string _nTextura;
 		/*std::cout << "Escriba la textura para " << archivo << " (sin .png)" << std::endl;
@@ -68,10 +66,11 @@ PagRenderer::PagRenderer() {
 		if (j == 2)_nTextura = "bb8-c2";
 		if (j == 3)_nTextura = "bb8-ca";
 		if (j == 4)_nTextura = "bb8-ca-top";
+		if (j == 5)_nTextura = "bb8-eye";
 
 		Structs::Fichero _fichero;
 		_fichero.nombreAlumno = archivo;
-		_fichero.archivoIN = path;
+		_fichero.archivoIN = archivo;
 		_fichero.nTextura = _nTextura;
 		ficheros[perfiles - j] = _fichero;
 		j--;
@@ -100,6 +99,20 @@ void PagRenderer::cargarEscena() {
 	//Creamos las Geometrias y Topologias de los diferentes objetos que componen la escena
 	objects.createObject();
 
+	glm::mat4 ModelMatrix(1.0);
+
+	ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(6.0f, 44.0f, -10.0f));
+	objects.setModelMatrix(ModelMatrix, 5);
+
+	/*ModelMatrix = glm::rotate(glm::mat4(1.0f), (glm::mediump_float)-95, glm::vec3(0.0f, -1.0f, 0.0f));
+	objects.setModelMatrix(ModelMatrix, 5);*/
+
+	ModelMatrix = glm::rotate(glm::mat4(1.0f), (glm::mediump_float)120, glm::vec3(1.0f, 0.0f, 1.0f));
+	objects.setModelMatrix(ModelMatrix, 5);
+
+	ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -55.0f, 0.0f));
+	objects.setModelMatrix(ModelMatrix, 5);
+	
 	//Cargamos todas las Texturas del directorio Textures
 	DIR *dir = opendir("Textures/");
 
