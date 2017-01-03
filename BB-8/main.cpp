@@ -5,7 +5,7 @@ PagRenderer escena;
 PagCamera camera;
 
 static void cursor_position_callback(GLFWwindow* window, double xpos, double ypos) {
-	camera.mover(xpos, ypos);
+	camera.girar(xpos, ypos);
 }
 
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
@@ -43,7 +43,21 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	}
 	if (key == GLFW_KEY_O && action == GLFW_RELEASE) {
 		camera.setOrbit(false);
-		camera.resetCamera();
+		//camera.resetCamera();
+	}
+	if (key == GLFW_KEY_UP && action == GLFW_REPEAT) {
+		if(camera.getTruck()) camera.mover(0.0, 0.0, 1.0);
+		else camera.mover(0.0, 1.0, 0.0);
+	}
+	if (key == GLFW_KEY_DOWN && action == GLFW_REPEAT) {
+		if (camera.getTruck())camera.mover(0.0, 0.0, -1.0);
+		else camera.mover(0.0, -1.0, 0.0);
+	}
+	if (key == GLFW_KEY_RIGHT && action == GLFW_REPEAT) {
+		camera.mover(1.0, 0.0, 0.0);
+	}
+	if (key == GLFW_KEY_LEFT && action == GLFW_REPEAT) {
+		camera.mover(-1.0, 0.0, 0.0);
 	}
 }
 

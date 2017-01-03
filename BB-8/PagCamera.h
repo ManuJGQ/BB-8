@@ -33,7 +33,8 @@ class PagCamera{
 public:
 	PagCamera();
 	PagCamera(double x, double y);
-	void mover(double movX, double movY);
+	void mover(double movX, double movY, double movZ);
+	void girar(double movX, double movY);
 	void movOrbit();
 	void resetCamera();
 	static void sleep() { Sleep(100); }
@@ -43,6 +44,7 @@ public:
 	void setTruck(bool _truck) { truck = _truck; }
 	void setOrbit(bool _orbit) { orbit = _orbit; }
 	bool getOrbit() const { return orbit; }
+	bool getTruck() const { return truck; }
 	void zoom(double _zoom);
 
 	~PagCamera();

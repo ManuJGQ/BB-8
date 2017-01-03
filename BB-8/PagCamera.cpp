@@ -39,23 +39,44 @@ orbit(false), ejecutandoOrbit(false), indOrbit(0), zOrbit(0) {
 		glm::vec3(xLookAt, yLookAt, zLookAt), glm::vec3(0.0, 1.0, 0.0));
 }
 
+void PagCamera::mover(double movX, double movY, double movZ){
+	if(!orbit) {
+		x -= movX;
+		xLookAt -= movX;
+		y += movY;
+		yLookAt += movY;
+		if (truck) {
+			zLookAt += movZ;
+			z += movZ;
+		}
+		ViewMatrix = glm::lookAt(glm::vec3(x, y, z),
+			glm::vec3(xLookAt, yLookAt, zLookAt), glm::vec3(0.0, 1.0, 0.0));
+	}
+}
+
 /**
 * Funcion que engloba todos los movimientos, excepto el Orbit y el Zoom, que se pueden realizar con la Camera
 */
-void PagCamera::mover(double movX, double movY) {
+void PagCamera::girar(double movX, double movY) {
 	if (!orbit) {
 		if (rotates) {
 			double xtemp = mouseX - movX;
-			xtemp = xtemp / 16;
+			xtemp = xtemp;
 			mouseX = movX;
 			xLookAt += xtemp;
 			zLookAt -= xtemp;
 			double ytemp = mouseY - movY;
-			ytemp = ytemp / 16;
+			ytemp = ytemp;
 			yLookAt += ytemp;
 			mouseY = movY;
+
+			ViewMatrix = glm::lookAt(glm::vec3(x, y, z),
+				glm::vec3(xLookAt, yLookAt, zLookAt), glm::vec3(0.0, 1.0, 0.0));
+		}else {
+			mouseX = movX;
+			mouseY = movY;
 		}
-		else if (truck) {
+		/*else if (truck) {
 			double ztemp = mouseY - movY;
 			ztemp = ztemp / 16;
 			zLookAt += ztemp;
@@ -75,9 +96,10 @@ void PagCamera::mover(double movX, double movY) {
 			yLookAt += ytemp;
 			mouseY = movY;
 			std::cout << xLookAt << " - " << yLookAt << " - " << zLookAt << std::endl;
-		}
-		ViewMatrix = glm::lookAt(glm::vec3(x, y, z),
-			glm::vec3(xLookAt, yLookAt, zLookAt), glm::vec3(0.0, 1.0, 0.0));
+		}*/
+	}else {
+		mouseX = movX;
+		mouseY = movY;
 	}
 }
 
@@ -133,7 +155,7 @@ void PagCamera::resetCamera() {
 */
 void PagCamera::zoom(double _zoom) {
 	_zoom = _zoom / 50;
-	fovY += _zoom;
+	if(fovY + _zoom >= 0.1) fovY += _zoom;
 	ProjectionMatrix = glm::perspective(fovY, 4.0f / 3.0f, 0.1f, 200.f);
 }
 
