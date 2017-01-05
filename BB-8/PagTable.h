@@ -8,7 +8,7 @@ class PagTable : public Pag3DObject {
 public:
 	PagTable();
 	void createObject() override;
-	void draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix, PagRenderer* renderer, PagLight* light) override;
+	void draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix, PagRenderer* renderer, std::pair<std::string, PagShaderProgram*> shader, PagLight* light) override;
 	PagTable(const PagTable &orig);
 	void operator = (const PagTable &orig);
 	~PagTable();

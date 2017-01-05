@@ -128,7 +128,7 @@ void PagRenderer::cargarEscena() {
 	ModelMatrix2 *= glm::translate(glm::mat4(), glm::vec3(0.0f, -2.0f, 0.0f));
 
 	objects.setModelMatrix(ModelMatrix2, 6);
-	
+
 	glm::mat4 ModelMatrix3(1.0);
 
 	ModelMatrix3 *= glm::translate(glm::mat4(), glm::vec3(-2.0f, -0.5f, 2.0f));
@@ -180,11 +180,6 @@ void PagRenderer::cargarEscena() {
 				ind = name.find_last_of("-");
 				std::string name2 = name.substr(0, ind);
 
-				PagShaderProgram *shader = new PagShaderProgram();
-
-				shader->createShaderProgram(name.c_str());
-
-				shaders.insert_or_assign(name, shader);
 
 				if (shadersNames.find(name2) == shadersNames.end()) {
 					nombreShaders.push_back(name2);
@@ -204,22 +199,29 @@ void PagRenderer::cargarEscena() {
 
 	nombreShader = nombreShaders[s];
 
-	for(int i=0;i<lights.size();i++) {
-		
+	if (nombreShader == "Texture" || nombreShader == "ADS") {
+		for (int i = 0; i < lights.size(); i++) {
+			std::string name = nombreShader + "-";
+			char l = lights[i].light;
+			name += l;
+			PagShaderProgram* shader = new PagShaderProgram();
+			shader->createShaderProgram(name.c_str());
+			shadersUtilizados.push_back(std::pair<std::string, PagShaderProgram*>(name, shader));
+		}
 	}
 }
 
 void PagRenderer::pintarEscena(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix) {
-	
+
 	glEnable(GLenum(GL_BLEND));
 	glDepthFunc(GLenum(GL_LEQUAL));
-	
+
 	for (int i = 0; i < lights.size(); i++) {
 
 		if (i == 0) { glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); }
 		else { glBlendFunc(GL_SRC_ALPHA, GL_ONE); }
 
-		objects.draw(ViewMatrix, ProjectionMatrix, this, &lights[i]);
+		objects.draw(ViewMatrix, ProjectionMatrix, this, shadersUtilizados[i], &lights[i]);
 
 	}
 }

@@ -68,7 +68,7 @@ public:
 	PagRevolutionObject(const PagRevolutionObject &orig);
 	void operator = (const PagRevolutionObject &orig);
 	void createObject() override;
-	void draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix, PagRenderer* renderer, PagLight* light) override;
+	void draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix, PagRenderer* renderer, std::pair<std::string, PagShaderProgram*> shader, PagLight* light) override;
 
 
 	//Metodos Gets & Set

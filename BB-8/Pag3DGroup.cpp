@@ -6,9 +6,9 @@
 * Funcion para pintar en modo solido todos los Pag3DElements que tenga
 * el Group
 */
-void Pag3DGroup::draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix, PagRenderer* renderer, PagLight* light){
+void Pag3DGroup::draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix, PagRenderer* renderer, std::pair<std::string, PagShaderProgram*> shader, PagLight* light){
 	for (int i = 0; i < numObjects; i++) {
-		elements[i]->draw(ViewMatrix, ProjectionMatrix, renderer, light);
+		elements[i]->draw(ViewMatrix, ProjectionMatrix, renderer, shader, light);
 	}
 }
 

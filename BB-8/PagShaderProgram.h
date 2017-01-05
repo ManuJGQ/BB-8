@@ -20,10 +20,15 @@ public:
 	bool setUniform(std::string name, glm::mat4 value);
 	bool setUniform(std::string name, glm::vec3 value);
 
+	bool getUniformsRealizados() { return uniformsRealizados; }
+	void setUniformsRealizados(bool _UR) { uniformsRealizados = _UR; }
+
 private:
 	GLuint handler;
 	bool linked;
 	std::string logString;
+
+	bool uniformsRealizados;
 
 	GLuint compileShader(const char *filename, GLenum shaderType);
 	bool fileExists(const std::string & fileName);

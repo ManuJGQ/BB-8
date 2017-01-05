@@ -12,9 +12,8 @@
 
 class PagRenderer{
 	Pag3DGroup objects;
-	
-	std::map<std::string, PagShaderProgram*> shaders;
-	std::vector<PagShaderProgram*> shadersUtilizados;
+
+	std::vector<std::pair<std::string, PagShaderProgram*>> shadersUtilizados;
 	std::map<std::string, PagTexture> textures;
 	std::vector<PagLight> lights;
 	Structs::Fichero *ficheros;
@@ -25,7 +24,6 @@ public:
 	PagRenderer();
 	void cargarEscena();
 	void pintarEscena(glm::mat4 ViewMatrix , glm::mat4 ProjectionMatrix);
-	PagShaderProgram* getShader(std::string _name) { return shaders.find(_name)->second; }
 	std::string getNombreShader() const { return nombreShader; }
 	GLuint getTexture(std::string n) {
 		std::map<std::string, PagTexture>::iterator it = textures.find(n);

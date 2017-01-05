@@ -5,6 +5,7 @@ PagShaderProgram::PagShaderProgram()
 	handler = 0;
 	linked = false;
 	logString = "";
+	uniformsRealizados = false;
 }
 
 

@@ -557,18 +557,23 @@ void PagRevolutionObject::createObject() {
 /**
  * Funcion encargada de pintar el PagRevolutionObject en todos los modos posibles
  */
-void PagRevolutionObject::draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix, PagRenderer* renderer, PagLight* light) {
-	std::string nShader = renderer->getNombreShader();
+void PagRevolutionObject::draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix, PagRenderer* renderer, std::pair<std::string, PagShaderProgram*> _shader, PagLight* light) {
+	std::string nShader = _shader.first;
 
 	if (nShader == "points" || nShader == "pointsMultiColor") {
 		if (nShader == "points") {
-			PagShaderProgram* shader = renderer->getShader("points");
+			PagShaderProgram* shader = _shader.second;
 
 			shader->use();
 
-			shader->setUniform("mvpMatrix", ProjectionMatrix * ViewMatrix * ModelMatrix);
-			shader->setUniform("vColor", glm::vec3(0.85, 0.65, 0.12));
-			shader->setUniform("pointSize", 4.0f);
+			if(!shader->getUniformsRealizados()) {
+				shader->setUniform("mvpMatrix", ProjectionMatrix * ViewMatrix * ModelMatrix);
+				shader->setUniform("vColor", glm::vec3(0.85, 0.65, 0.12));
+				shader->setUniform("pointSize", 4.0f);
+
+				shader->setUniformsRealizados(true);
+			}
+			
 
 			if(!primitivasRellenadas) {
 				glGenVertexArrays(1, &vao);
@@ -644,12 +649,16 @@ void PagRevolutionObject::draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix,
 			}
 		}
 		if (nShader == "pointsMultiColor") {
-			PagShaderProgram* shader = renderer->getShader("pointsMultiColor");
+			PagShaderProgram* shader = _shader.second;
 
 			shader->use();
 
-			shader->setUniform("mvpMatrix", ProjectionMatrix * ViewMatrix * ModelMatrix);
-			shader->setUniform("pointSize", 4.0f);
+			if(!shader->getUniformsRealizados()) {
+				shader->setUniform("mvpMatrix", ProjectionMatrix * ViewMatrix * ModelMatrix);
+				shader->setUniform("pointSize", 4.0f);
+				
+				shader->setUniformsRealizados(true);
+			}
 
 			if(!primitivasRellenadas) {
 				glGenVertexArrays(1, &vao);
@@ -741,15 +750,13 @@ void PagRevolutionObject::draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix,
 		}
 	}
 	else {
-		if (nShader == "ADS") {
-			std::string name = "ADS-";
+		if (nShader == "ADS-P" || nShader == "ADS-D" || nShader == "ADS-S") {
 			char l = light->light;
-			name += l;
-			PagShaderProgram* shader = renderer->getShader(name);
+			PagShaderProgram* shader = _shader.second;
 
 			shader->use();
 
-			if (l == 'P') {
+			if (l == 'P' && !shader->getUniformsRealizados()) {
 
 				shader->setUniform("mvpMatrix", ProjectionMatrix * ViewMatrix * ModelMatrix);
 				shader->setUniform("mModelView", ViewMatrix * ModelMatrix);
@@ -762,8 +769,9 @@ void PagRevolutionObject::draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix,
 				shader->setUniform("Is", light->Is * glm::vec3(1.0, 1.0, 1.0));
 				shader->setUniform("Shininess", light->shininess);
 
+				shader->setUniformsRealizados(true);
 			}
-			else if (l == 'D') {
+			else if (l == 'D' && !shader->getUniformsRealizados()) {
 
 				shader->setUniform("mvpMatrix", ProjectionMatrix * ViewMatrix * ModelMatrix);
 				shader->setUniform("mModelView", ViewMatrix * ModelMatrix);
@@ -776,8 +784,9 @@ void PagRevolutionObject::draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix,
 				shader->setUniform("Is", light->Is * glm::vec3(1.0, 1.0, 1.0));
 				shader->setUniform("Shininess", light->shininess);
 
+				shader->setUniformsRealizados(true);
 			}
-			else if (l == 'S') {
+			else if (l == 'S' && !shader->getUniformsRealizados()) {
 
 				shader->setUniform("mvpMatrix", ProjectionMatrix * ViewMatrix * ModelMatrix);
 				shader->setUniform("mModelView", ViewMatrix * ModelMatrix);
@@ -793,6 +802,7 @@ void PagRevolutionObject::draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix,
 				shader->setUniform("y", light->y);
 				shader->setUniform("s", light->s);
 
+				shader->setUniformsRealizados(true);
 			}
 
 			if(!primitivasRellenadas) {
@@ -886,12 +896,16 @@ void PagRevolutionObject::draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix,
 			}
 		}
 		if (nShader == "Test") {
-			PagShaderProgram* shader = renderer->getShader("Test");
+			PagShaderProgram* shader = _shader.second;
 
 			shader->use();
 
-			shader->setUniform("mvpMatrix", ProjectionMatrix * ViewMatrix * ModelMatrix);
-			shader->setUniform("pointSize", 4.0f);
+			if(!shader->getUniformsRealizados()) {
+				shader->setUniform("mvpMatrix", ProjectionMatrix * ViewMatrix * ModelMatrix);
+				shader->setUniform("pointSize", 4.0f);
+
+				shader->setUniformsRealizados(true);
+			}
 
 			if(!primitivasRellenadas) {
 				glGenVertexArrays(1, &vao);
@@ -968,11 +982,9 @@ void PagRevolutionObject::draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix,
 				glDrawElements(GL_TRIANGLE_FAN, (sizeof(GLuint) * (slices + 1)) / sizeof(GLuint), GL_UNSIGNED_INT, NULL);
 			}
 		}
-		if (nShader == "Texture") {
-			std::string name = "Texture-";
+		if (nShader == "Texture-P" || nShader == "Texture-D" || nShader == "Texture-S") {
 			char l = light->light;
-			name += l;
-			PagShaderProgram* shader = renderer->getShader(name);
+			PagShaderProgram* shader = _shader.second;
 
 			shader->use();
 
@@ -981,26 +993,32 @@ void PagRevolutionObject::draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix,
 				shader->setUniform("mvpMatrix", ProjectionMatrix * ViewMatrix * ModelMatrix);
 				shader->setUniform("mModelView", ViewMatrix * ModelMatrix);
 				shader->setUniform("lightPosition", glm::vec3(ViewMatrix * glm::vec4(light->position, 1.0)));
-				shader->setUniform("Ks", light->Ks);
-				shader->setUniform("Ia", light->Ia * glm::vec3(1.0, 1.0, 1.0));
-				shader->setUniform("Id", light->Id * glm::vec3(1.0, 1.0, 1.0));
-				shader->setUniform("Is", light->Is * glm::vec3(1.0, 1.0, 1.0));
-				shader->setUniform("Shininess", light->shininess);
-				shader->setUniform("TexSamplerColor", 0);
+				if (!shader->getUniformsRealizados()) {
+					shader->setUniform("Ks", light->Ks);
+					shader->setUniform("Ia", light->Ia * glm::vec3(1.0, 1.0, 1.0));
+					shader->setUniform("Id", light->Id * glm::vec3(1.0, 1.0, 1.0));
+					shader->setUniform("Is", light->Is * glm::vec3(1.0, 1.0, 1.0));
+					shader->setUniform("Shininess", light->shininess);
+					shader->setUniform("TexSamplerColor", 0);
 
+					shader->setUniformsRealizados(true);
+				}
 			}
 			else if (l == 'D') {
 
 				shader->setUniform("mvpMatrix", ProjectionMatrix * ViewMatrix * ModelMatrix);
 				shader->setUniform("mModelView", ViewMatrix * ModelMatrix);
 				shader->setUniform("lightDirection", glm::vec3(ViewMatrix * glm::vec4(light->direction, 0.0)));
-				shader->setUniform("Ks", light->Ks);
-				shader->setUniform("Ia", light->Ia * glm::vec3(1.0, 1.0, 1.0));
-				shader->setUniform("Id", light->Id * glm::vec3(1.0, 1.0, 1.0));
-				shader->setUniform("Is", light->Is * glm::vec3(1.0, 1.0, 1.0));
-				shader->setUniform("Shininess", light->shininess);
-				shader->setUniform("TexSamplerColor", 0);
+				if(!shader->getUniformsRealizados()) {
+					shader->setUniform("Ks", light->Ks);
+					shader->setUniform("Ia", light->Ia * glm::vec3(1.0, 1.0, 1.0));
+					shader->setUniform("Id", light->Id * glm::vec3(1.0, 1.0, 1.0));
+					shader->setUniform("Is", light->Is * glm::vec3(1.0, 1.0, 1.0));
+					shader->setUniform("Shininess", light->shininess);
+					shader->setUniform("TexSamplerColor", 0);
 
+					shader->setUniformsRealizados(true);
+				}
 			}
 			else if (l == 'S') {
 
@@ -1008,15 +1026,19 @@ void PagRevolutionObject::draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix,
 				shader->setUniform("mModelView", ViewMatrix * ModelMatrix);
 				shader->setUniform("lightPosition", glm::vec3(ViewMatrix * glm::vec4(light->position, 1.0)));
 				shader->setUniform("lightDirection", glm::vec3(ViewMatrix * glm::vec4(light->direction, 0.0)));
-				shader->setUniform("Ks", light->Ks);
-				shader->setUniform("Ia", light->Ia * glm::vec3(1.0, 1.0, 1.0));
-				shader->setUniform("Id", light->Id * glm::vec3(1.0, 1.0, 1.0));
-				shader->setUniform("Is", light->Is * glm::vec3(1.0, 1.0, 1.0));
-				shader->setUniform("Shininess", light->shininess);
-				shader->setUniform("y", light->y);
-				shader->setUniform("s", light->s);
-				shader->setUniform("TexSamplerColor", 0);
+				if(!shader->getUniformsRealizados()) {
 
+					shader->setUniform("Ks", light->Ks);
+					shader->setUniform("Ia", light->Ia * glm::vec3(1.0, 1.0, 1.0));
+					shader->setUniform("Id", light->Id * glm::vec3(1.0, 1.0, 1.0));
+					shader->setUniform("Is", light->Is * glm::vec3(1.0, 1.0, 1.0));
+					shader->setUniform("Shininess", light->shininess);
+					shader->setUniform("y", light->y);
+					shader->setUniform("s", light->s);
+					shader->setUniform("TexSamplerColor", 0);
+
+					shader->setUniformsRealizados(true);
+				}
 			}
 
 			if(!primitivasRellenadas) {

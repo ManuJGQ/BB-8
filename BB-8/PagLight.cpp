@@ -3,7 +3,7 @@
 PagLight::PagLight(){}
 
 PagLight::PagLight(glm::vec3 _positionDirection, float _Ia, float _Id, float _Is,
-	glm::vec3 _Ks, char _light, float _shininess): encendida(false) {
+	glm::vec3 _Ks, char _light, float _shininess){
 
 	if (_light == 'P') {
 
@@ -39,7 +39,7 @@ PagLight::PagLight(glm::vec3 _positionDirection, float _Ia, float _Id, float _Is
 
 
 PagLight::PagLight(glm::vec3 _position, glm::vec3 _direction, float _Ia, float _Id, float _Is,
-	glm::vec3 _Ks, float _y, float _s, float _shininess): encendida(false) {
+	glm::vec3 _Ks, float _y, float _s, float _shininess) {
 
 	light = 'S';
 
@@ -59,7 +59,7 @@ PagLight::PagLight(glm::vec3 _position, glm::vec3 _direction, float _Ia, float _
 
 }
 
-PagLight::PagLight(const PagLight & orig): encendida(false) {
+PagLight::PagLight(const PagLight & orig) {
 	light = orig.light;
 	if (light == 'S') {
 		position = orig.position;

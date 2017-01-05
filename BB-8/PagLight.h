@@ -9,8 +9,6 @@
 class PagLight{
 public:
 
-	bool encendida;
-
 	char light; // P - Puntuales  D - Direccional  S - Spot
 
 	glm::vec3 position;
@@ -35,8 +33,6 @@ public:
 		glm::vec3 _Ks, float _y, float _s, float _shininess);
 	PagLight(const PagLight &orig);
 	void operator = (const PagLight &orig);
-	bool getEncendida() const { return encendida; }
-	void setEncendida(bool _encendida) { encendida = _encendida; }
 	~PagLight();
 };
 
