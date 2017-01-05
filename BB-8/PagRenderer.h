@@ -14,6 +14,7 @@ class PagRenderer{
 	Pag3DGroup objects;
 	
 	std::map<std::string, PagShaderProgram*> shaders;
+	std::vector<PagShaderProgram*> shadersUtilizados;
 	std::map<std::string, PagTexture> textures;
 	std::vector<PagLight> lights;
 	Structs::Fichero *ficheros;

@@ -41,7 +41,7 @@ PagRenderer::PagRenderer() {
 	//ficheroGeom.close();
 
 	// Leemos los datos y txt del usuario
-	int perfiles = 7;
+	int perfiles = 8;
 	/*std::cout << "Introduce el numero de perfiles" << std::endl;
 	std::cin >> perfiles;*/
 
@@ -57,6 +57,7 @@ PagRenderer::PagRenderer() {
 		if (j == 5)archivo = "b5-in.txt";
 		if (j == 6)archivo = "b6-in.txt";
 		if (j == 7)archivo = "b7-in.txt";
+		if (j == 8)archivo = "b8-in.txt";
 		/*std::cout << "Escriba el nombre del fichero " << perfiles - j + 1 << " (con .txt)" << std::endl;
 		std::cin >> archivo;*/
 
@@ -71,6 +72,7 @@ PagRenderer::PagRenderer() {
 		if (j == 5)_nTextura = "bb8-eye";
 		if (j == 6)_nTextura = "bb8-eye";
 		if (j == 7)_nTextura = "bb8-eye";
+		if (j == 8)_nTextura = "bb8-eye";
 
 		Structs::Fichero _fichero;
 		_fichero.nombreAlumno = archivo;
@@ -94,9 +96,9 @@ PagRenderer::PagRenderer() {
 
 void PagRenderer::cargarEscena() {
 	//Cargamos las luces
-	lights.push_back(PagLight(glm::vec3(0.0, 80.0, 0.0), 0.2f, 0.5f, 0.3f, glm::vec3(1.0, 1.0, 1.0), glm::vec3(1.0, 1.0, 1.0), glm::vec3(1.0, 1.0, 1.0), 'P', 50.0f));
-	lights.push_back(PagLight(glm::vec3(0.0, 20.0, -80.0), 0.2f, 0.5f, 0.3f, glm::vec3(1.0, 1.0, 1.0), glm::vec3(1.0, 1.0, 1.0), glm::vec3(1.0, 1.0, 1.0), 'P', 50.0f));
-	lights.push_back(PagLight(glm::vec3(80.0, 20.0, 0.0), 0.2f, 0.5f, 0.3f, glm::vec3(1.0, 1.0, 1.0), glm::vec3(1.0, 1.0, 1.0), glm::vec3(1.0, 1.0, 1.0), 'P', 50.0f));
+	lights.push_back(PagLight(glm::vec3(0.0, 80.0, 0.0), 0.2f, 0.5f, 0.3f, glm::vec3(1.0, 1.0, 1.0), 'P', 50.0f));
+	lights.push_back(PagLight(glm::vec3(0.0, 20.0, -80.0), 0.2f, 0.5f, 0.3f, glm::vec3(1.0, 1.0, 1.0), 'P', 50.0f));
+	lights.push_back(PagLight(glm::vec3(80.0, 20.0, 0.0), 0.2f, 0.5f, 0.3f, glm::vec3(1.0, 1.0, 1.0), 'P', 50.0f));
 	//lights.push_back(PagLight(glm::vec3(-80.0, 20.0, 0.0), 0.2f, 0.5f, 0.3f, glm::vec3(1.0, 1.0, 1.0), glm::vec3(1.0, 1.0, 1.0), glm::vec3(1.0, 1.0, 1.0), 'P', 50.0f));
 	//lights.push_back(PagLight(glm::vec3(0.0, 20.0, 80.0), 0.2f, 0.5f, 0.3f, glm::vec3(1.0, 1.0, 1.0), glm::vec3(1.0, 1.0, 1.0), glm::vec3(1.0, 1.0, 1.0), 'P', 50.0f));
 
@@ -127,7 +129,14 @@ void PagRenderer::cargarEscena() {
 
 	objects.setModelMatrix(ModelMatrix2, 6);
 	
+	glm::mat4 ModelMatrix3(1.0);
+
+	ModelMatrix3 *= glm::translate(glm::mat4(), glm::vec3(-2.0f, -0.5f, 2.0f));
+
+	objects.setModelMatrix(ModelMatrix3, 8);
+
 	//Cargamos todas las Texturas del directorio Textures
+
 	DIR *dir = opendir("Textures/");
 
 	dirent *entry;
@@ -194,6 +203,10 @@ void PagRenderer::cargarEscena() {
 	std::cin >> s;
 
 	nombreShader = nombreShaders[s];
+
+	for(int i=0;i<lights.size();i++) {
+		
+	}
 }
 
 void PagRenderer::pintarEscena(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix) {

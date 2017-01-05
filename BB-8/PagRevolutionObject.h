@@ -6,9 +6,12 @@
 
 #include "PagSubdivisionProfile.h"
 #include "Pag3DObject.h"
+#include "PagMaterial.h"
 
 class PagRevolutionObject: public Pag3DObject{
 	glm::mat4 ModelMatrix;
+
+	PagMaterial material;
 
 	//Flags para saber si tiene tapa
 	bool flagBottomTape;
@@ -65,7 +68,6 @@ public:
 	PagRevolutionObject(const PagRevolutionObject &orig);
 	void operator = (const PagRevolutionObject &orig);
 	void createObject() override;
-	//void drawPointsCloud(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix) override;
 	void draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix, PagRenderer* renderer, PagLight* light) override;
 
 

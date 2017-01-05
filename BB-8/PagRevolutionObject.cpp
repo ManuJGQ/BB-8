@@ -17,7 +17,7 @@ geometria(nullptr), geometriaBottomTape(nullptr), geometriaTopTape(nullptr), coo
 coordtextBottomTape(nullptr), coordtextTopTape(nullptr), indices(nullptr), indicesBottomTape(nullptr),
 indicesTopTape(nullptr), slices(0), tamaGeometriaCoordText(0), tamaIndices(0),
 pointsColor(nullptr), pointsColorBottom(nullptr), pointsColorTop(nullptr), _indices(nullptr), _indicesTop(nullptr),
-_indicesBottom(nullptr), primitivasRellenadas(false) {
+_indicesBottom(nullptr), primitivasRellenadas(false), material() {
 };
 
 /**
@@ -28,7 +28,7 @@ PagRevolutionObject::PagRevolutionObject(int _numPuntosPerfilOriginal, int _numD
 	geometria(nullptr), geometriaBottomTape(nullptr), geometriaTopTape(nullptr), coordtext(nullptr), coordtextBottomTape(nullptr),
 	coordtextTopTape(nullptr), indices(nullptr), indicesBottomTape(nullptr), indicesTopTape(nullptr),
 	tamaGeometriaCoordText(0), tamaIndices(0), pointsColor(nullptr), pointsColorBottom(nullptr), pointsColorTop(nullptr),
-	_indices(nullptr), _indicesTop(nullptr), _indicesBottom(nullptr), primitivasRellenadas(false), nombreAlumno(_nombreAlumno), nombreTextura(_nombreTextura) {
+	_indices(nullptr), _indicesTop(nullptr), _indicesBottom(nullptr), primitivasRellenadas(false), nombreAlumno(_nombreAlumno), nombreTextura(_nombreTextura), material() {
 
 	flagBottomTape = _flagBottomTape;
 	flagTopTape = _flagTopTape;
@@ -72,6 +72,7 @@ void PagRevolutionObject::operator=(const PagRevolutionObject & orig) {
 	subdivisionProfiles = orig.subdivisionProfiles;
 	nombreAlumno = orig.nombreAlumno;
 	nombreTextura = orig.nombreTextura;
+	material = orig.material;
 
 	if (orig.geometria != nullptr) {
 		geometria = new Geometria[tamaGeometriaCoordText];
@@ -205,6 +206,16 @@ void PagRevolutionObject::operator=(const PagRevolutionObject & orig) {
  * Funcion encargada de crear la Geometria y Topologia del PagRevolutionObject
  */
 void PagRevolutionObject::createObject() {
+	if (nombreAlumno == "mesa") material = PagMaterial(glm::vec3(0.55, 0.27, 0.07), glm::vec3(0.55, 0.27, 0.07));
+	if (nombreAlumno == "b1") material = PagMaterial(glm::vec3(1.0, 0.55, 0.0), glm::vec3(1.0, 0.55, 0.0));
+	if (nombreAlumno == "b2") material = PagMaterial(glm::vec3(0.36, 0.36, 0.36), glm::vec3(0.36, 0.36, 0.36));
+	if (nombreAlumno == "b3") material = PagMaterial(glm::vec3(1.0, 0.55, 0.0), glm::vec3(1.0, 0.55, 0.0));
+	if (nombreAlumno == "b4") material = PagMaterial(glm::vec3(1.0, 0.55, 0.0), glm::vec3(1.0, 0.55, 0.0));
+	if (nombreAlumno == "b5") material = PagMaterial(glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
+	if (nombreAlumno == "b6") material = PagMaterial(glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
+	if (nombreAlumno == "b7") material = PagMaterial(glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
+	if (nombreAlumno == "b8") material = PagMaterial(glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
+
 	int numPuntosPerfil = subdivisionProfiles.getNumPuntosPerfil();
 
 	int numTapas = 0;
@@ -743,8 +754,8 @@ void PagRevolutionObject::draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix,
 				shader->setUniform("mvpMatrix", ProjectionMatrix * ViewMatrix * ModelMatrix);
 				shader->setUniform("mModelView", ViewMatrix * ModelMatrix);
 				shader->setUniform("lightPosition", glm::vec3(ViewMatrix * glm::vec4(light->position, 1.0)));
-				shader->setUniform("Ka", light->Ka);
-				shader->setUniform("Kd", light->Kd);
+				shader->setUniform("Ka", material.getKa());
+				shader->setUniform("Kd", material.getKd());
 				shader->setUniform("Ks", light->Ks);
 				shader->setUniform("Ia", light->Ia * glm::vec3(1.0, 1.0, 1.0));
 				shader->setUniform("Id", light->Id * glm::vec3(1.0, 1.0, 1.0));
@@ -757,8 +768,8 @@ void PagRevolutionObject::draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix,
 				shader->setUniform("mvpMatrix", ProjectionMatrix * ViewMatrix * ModelMatrix);
 				shader->setUniform("mModelView", ViewMatrix * ModelMatrix);
 				shader->setUniform("lightDirection", glm::vec3(ViewMatrix * glm::vec4(light->direction, 0.0)));
-				shader->setUniform("Ka", light->Ka);
-				shader->setUniform("Kd", light->Kd);
+				shader->setUniform("Ka", material.getKa());
+				shader->setUniform("Kd", material.getKd());
 				shader->setUniform("Ks", light->Ks);
 				shader->setUniform("Ia", light->Ia * glm::vec3(1.0, 1.0, 1.0));
 				shader->setUniform("Id", light->Id * glm::vec3(1.0, 1.0, 1.0));
@@ -772,8 +783,8 @@ void PagRevolutionObject::draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix,
 				shader->setUniform("mModelView", ViewMatrix * ModelMatrix);
 				shader->setUniform("lightPosition", glm::vec3(ViewMatrix * glm::vec4(light->position, 1.0)));
 				shader->setUniform("lightDirection", glm::vec3(ViewMatrix * glm::vec4(light->direction, 0.0)));
-				shader->setUniform("Ka", light->Ka);
-				shader->setUniform("Kd", light->Kd);
+				shader->setUniform("Ka", material.getKa());
+				shader->setUniform("Kd", material.getKd());
 				shader->setUniform("Ks", light->Ks);
 				shader->setUniform("Ia", light->Ia * glm::vec3(1.0, 1.0, 1.0));
 				shader->setUniform("Id", light->Id * glm::vec3(1.0, 1.0, 1.0));

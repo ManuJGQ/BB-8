@@ -3,9 +3,9 @@
 PagLight::PagLight(){}
 
 PagLight::PagLight(glm::vec3 _positionDirection, float _Ia, float _Id, float _Is,
-	glm::vec3 _Ka, glm::vec3 _Kd, glm::vec3 _Ks, char _light, float _shininess){
+	glm::vec3 _Ks, char _light, float _shininess): encendida(false) {
 
-	if(_light == 'P') {
+	if (_light == 'P') {
 
 		light = 'P';
 
@@ -14,14 +14,14 @@ PagLight::PagLight(glm::vec3 _positionDirection, float _Ia, float _Id, float _Is
 		Ia = _Ia;
 		Id = _Id;
 		Is = _Is;
-		Ka = _Ka;
-		Kd = _Kd;
+
 		Ks = _Ks;
 
 		shininess = _shininess;
 
-	}else if(_light == 'D') {
-		
+	}
+	else if (_light == 'D') {
+
 		light = 'D';
 
 		direction = _positionDirection;
@@ -29,8 +29,7 @@ PagLight::PagLight(glm::vec3 _positionDirection, float _Ia, float _Id, float _Is
 		Ia = _Ia;
 		Id = _Id;
 		Is = _Is;
-		Ka = _Ka;
-		Kd = _Kd;
+
 		Ks = _Ks;
 
 		shininess = _shininess;
@@ -40,7 +39,7 @@ PagLight::PagLight(glm::vec3 _positionDirection, float _Ia, float _Id, float _Is
 
 
 PagLight::PagLight(glm::vec3 _position, glm::vec3 _direction, float _Ia, float _Id, float _Is,
-	glm::vec3 _Ka, glm::vec3 _Kd, glm::vec3 _Ks, float _y, float _s, float _shininess){
+	glm::vec3 _Ks, float _y, float _s, float _shininess): encendida(false) {
 
 	light = 'S';
 
@@ -50,8 +49,7 @@ PagLight::PagLight(glm::vec3 _position, glm::vec3 _direction, float _Ia, float _
 	Ia = _Ia;
 	Id = _Id;
 	Is = _Is;
-	Ka = _Ka;
-	Kd = _Kd;
+
 	Ks = _Ks;
 
 	y = _y;
@@ -61,43 +59,42 @@ PagLight::PagLight(glm::vec3 _position, glm::vec3 _direction, float _Ia, float _
 
 }
 
-PagLight::PagLight(const PagLight & orig){
+PagLight::PagLight(const PagLight & orig): encendida(false) {
 	light = orig.light;
-	if(light == 'S') {
+	if (light == 'S') {
 		position = orig.position;
 		direction = orig.direction;
 
 		Ia = orig.Ia;
 		Id = orig.Id;
 		Is = orig.Is;
-		Ka = orig.Ka;
-		Kd = orig.Kd;
+
 		Ks = orig.Ks;
 
 		y = orig.y;
 		s = orig.s;
 
 		shininess = orig.shininess;
-	}else {
-		if(light == 'P') {
+	}
+	else {
+		if (light == 'P') {
 			position = orig.position;
 
 			Ia = orig.Ia;
 			Id = orig.Id;
 			Is = orig.Is;
-			Ka = orig.Ka;
-			Kd = orig.Kd;
+
 			Ks = orig.Ks;
 
 			shininess = orig.shininess;
-		}else {
+		}
+		else {
 			direction = orig.direction;
 
 			Ia = orig.Ia;
 			Id = orig.Id;
 			Is = orig.Is;
-			Ka = orig.Ka;
-			Kd = orig.Kd;
+
 			Ks = orig.Ks;
 
 			shininess = orig.shininess;
@@ -108,6 +105,5 @@ PagLight::PagLight(const PagLight & orig){
 void PagLight::operator=(const PagLight & orig){
 	*this = orig;
 }
-
 
 PagLight::~PagLight(){}
