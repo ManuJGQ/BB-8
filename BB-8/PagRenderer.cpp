@@ -74,10 +74,26 @@ PagRenderer::PagRenderer() {
 		if (j == 7)_nTextura = "bb8-eye";
 		if (j == 8)_nTextura = "bb8-eye";
 
+
+		std::string _nBump;
+		/*std::cout << "Escriba la textura para " << archivo << " (sin .png)" << std::endl;
+		std::cin >> _nTextura;*/
+
+		if (j == 1)_nBump = "bump1";
+		if (j == 2)_nBump = "bump3";
+		if (j == 3)_nBump = "bump2";
+		if (j == 4)_nBump = "bump3";
+		if (j == 5)_nBump = "bump3";
+		if (j == 6)_nBump = "bump3";
+		if (j == 7)_nBump = "bump3";
+		if (j == 8)_nBump = "bump3";
+
+
 		Structs::Fichero _fichero;
 		_fichero.nombreAlumno = archivo;
 		_fichero.archivoIN = archivo;
 		_fichero.nTextura = _nTextura;
+		_fichero.nBump = _nBump;
 		ficheros[perfiles - j] = _fichero;
 		j--;
 	}
@@ -199,7 +215,7 @@ void PagRenderer::cargarEscena() {
 
 	nombreShader = nombreShaders[s];
 
-	if (nombreShader == "Texture" || nombreShader == "ADS") {
+	if (nombreShader == "Texture" || nombreShader == "ADS" || nombreShader == "Bump") {
 		for (int i = 0; i < lights.size(); i++) {
 			std::string name = nombreShader + "-";
 			char l = lights[i].light;

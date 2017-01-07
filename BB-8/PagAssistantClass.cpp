@@ -21,6 +21,7 @@ PagRevolutionObject PagAssistantClass::leerDatos(Structs::Fichero _fichero) cons
 	std::string nombreAlumno = _fichero.nombreAlumno;
 	std::string archivo = _fichero.archivoIN;
 	std::string nombreTextura = _fichero.nTextura;
+	std::string nombreBump = _fichero.nBump;
 	bool flagBottomTape = false;
 	bool flagTopTape = false;
 
@@ -101,7 +102,7 @@ PagRevolutionObject PagAssistantClass::leerDatos(Structs::Fichero _fichero) cons
 		perfil = perfilTemp;
 
 		return PagRevolutionObject(numPuntosPerfilOriginal, numDivisiones, perfil,
-			flagBottomTape, flagTopTape, slices, nombreAlumno, nombreTextura);
+			flagBottomTape, flagTopTape, slices, nombreAlumno, nombreTextura, nombreBump);
 
 	}
 	catch (std::string &e) {

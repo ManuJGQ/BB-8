@@ -5,7 +5,6 @@ in vec3 lDir;
 in vec3 vDir;
 in vec2 texCoord;
 
-uniform vec3 lightPosition;
 uniform vec3 Ks;
 uniform vec3 Ia;
 uniform vec3 Id;

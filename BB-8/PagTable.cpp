@@ -12,7 +12,7 @@ PagTable::PagTable(){
 									{ 6,1 },
 									{ 3,1 },
 									{ 0,1 }};
-	table = PagRevolutionObject(11, 0, pointsTable, true, true, 100, "mesa", "tronco");
+	table = PagRevolutionObject(11, 0, pointsTable, true, true, 100, "mesa", "tronco", "bump3");
 }
 
 void PagTable::createObject(){

@@ -24,11 +24,11 @@ _indicesBottom(nullptr), primitivasRellenadas(false), material() {
  * Constructor parametrizado de PagRevolutionObject
  */
 PagRevolutionObject::PagRevolutionObject(int _numPuntosPerfilOriginal, int _numDivisiones, PuntosPerfil *_perfilOriginal,
-	bool _flagBottomTape, bool _flagTopTape, int _slices, std::string _nombreAlumno, std::string _nombreTextura) : flagBottomTape(false), flagTopTape(false),
+	bool _flagBottomTape, bool _flagTopTape, int _slices, std::string _nombreAlumno, std::string _nombreTextura, std::string _nombreBump) : flagBottomTape(false), flagTopTape(false),
 	geometria(nullptr), geometriaBottomTape(nullptr), geometriaTopTape(nullptr), coordtext(nullptr), coordtextBottomTape(nullptr),
 	coordtextTopTape(nullptr), indices(nullptr), indicesBottomTape(nullptr), indicesTopTape(nullptr),
 	tamaGeometriaCoordText(0), tamaIndices(0), pointsColor(nullptr), pointsColorBottom(nullptr), pointsColorTop(nullptr),
-	_indices(nullptr), _indicesTop(nullptr), _indicesBottom(nullptr), primitivasRellenadas(false), nombreAlumno(_nombreAlumno), nombreTextura(_nombreTextura), material() {
+	_indices(nullptr), _indicesTop(nullptr), _indicesBottom(nullptr), primitivasRellenadas(false), nombreAlumno(_nombreAlumno), nombreTextura(_nombreTextura), nombreBump(_nombreBump), material() {
 
 	flagBottomTape = _flagBottomTape;
 	flagTopTape = _flagTopTape;
@@ -73,6 +73,7 @@ void PagRevolutionObject::operator=(const PagRevolutionObject & orig) {
 	nombreAlumno = orig.nombreAlumno;
 	nombreTextura = orig.nombreTextura;
 	material = orig.material;
+	nombreBump = orig.nombreBump;
 
 	if (orig.geometria != nullptr) {
 		geometria = new Geometria[tamaGeometriaCoordText];
@@ -1155,6 +1156,208 @@ void PagRevolutionObject::draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix,
 
 				glActiveTexture(GL_TEXTURE0);
 				glBindTexture(GL_TEXTURE_2D, renderer->getTexture(nombreTextura));
+
+				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboTopTape);
+				glDrawElements(GL_TRIANGLE_FAN, (sizeof(GLuint) * (slices + 1)) / sizeof(GLuint), GL_UNSIGNED_INT, NULL);
+			}
+		}
+		if (nShader == "Bump-P" || nShader == "Bump-P" || nShader == "Bump-P") {
+			char l = light->light;
+			PagShaderProgram* shader = _shader.second;
+
+			shader->use();
+
+			if (l == 'P') {
+
+				shader->setUniform("mvpMatrix", ProjectionMatrix * ViewMatrix * ModelMatrix);
+				shader->setUniform("mModelView", ViewMatrix * ModelMatrix);
+				shader->setUniform("lightPosition", glm::vec3(ViewMatrix * glm::vec4(light->position, 1.0)));
+				if (!shader->getUniformsRealizados()) {
+					shader->setUniform("Ks", light->Ks);
+					shader->setUniform("Ia", light->Ia * glm::vec3(1.0, 1.0, 1.0));
+					shader->setUniform("Id", light->Id * glm::vec3(1.0, 1.0, 1.0));
+					shader->setUniform("Is", light->Is * glm::vec3(1.0, 1.0, 1.0));
+					shader->setUniform("Shininess", light->shininess);
+					shader->setUniform("TexSamplerColor", 0);
+					shader->setUniform("TexSamplerBump", 1);
+
+					shader->setUniformsRealizados(true);
+				}
+			}
+			else if (l == 'D') {
+
+				shader->setUniform("mvpMatrix", ProjectionMatrix * ViewMatrix * ModelMatrix);
+				shader->setUniform("mModelView", ViewMatrix * ModelMatrix);
+				shader->setUniform("lightDirection", glm::vec3(ViewMatrix * glm::vec4(light->direction, 0.0)));
+				if (!shader->getUniformsRealizados()) {
+					shader->setUniform("Ks", light->Ks);
+					shader->setUniform("Ia", light->Ia * glm::vec3(1.0, 1.0, 1.0));
+					shader->setUniform("Id", light->Id * glm::vec3(1.0, 1.0, 1.0));
+					shader->setUniform("Is", light->Is * glm::vec3(1.0, 1.0, 1.0));
+					shader->setUniform("Shininess", light->shininess);
+					shader->setUniform("TexSamplerColor", 0);
+
+					shader->setUniformsRealizados(true);
+				}
+			}
+			else if (l == 'S') {
+
+				shader->setUniform("mvpMatrix", ProjectionMatrix * ViewMatrix * ModelMatrix);
+				shader->setUniform("mModelView", ViewMatrix * ModelMatrix);
+				shader->setUniform("lightPosition", glm::vec3(ViewMatrix * glm::vec4(light->position, 1.0)));
+				shader->setUniform("lightDirection", glm::vec3(ViewMatrix * glm::vec4(light->direction, 0.0)));
+				if (!shader->getUniformsRealizados()) {
+
+					shader->setUniform("Ks", light->Ks);
+					shader->setUniform("Ia", light->Ia * glm::vec3(1.0, 1.0, 1.0));
+					shader->setUniform("Id", light->Id * glm::vec3(1.0, 1.0, 1.0));
+					shader->setUniform("Is", light->Is * glm::vec3(1.0, 1.0, 1.0));
+					shader->setUniform("Shininess", light->shininess);
+					shader->setUniform("y", light->y);
+					shader->setUniform("s", light->s);
+					shader->setUniform("TexSamplerColor", 0);
+
+					shader->setUniformsRealizados(true);
+				}
+			}
+
+			if (!primitivasRellenadas) {
+				glGenVertexArrays(1, &vao);
+				glGenBuffers(1, &vbo);
+				glGenBuffers(1, &ibo);
+			}
+
+			glBindVertexArray(vao);
+			glBindBuffer(GL_ARRAY_BUFFER, vbo);
+
+			glEnableVertexAttribArray(0);
+			glVertexAttribPointer(0, sizeof(glm::vec3) / sizeof(GLfloat),
+				GL_FLOAT, GL_FALSE, sizeof(PagVaoData),						//POSITIONS
+				((GLubyte *)nullptr + (0)));
+
+			glEnableVertexAttribArray(1);
+			glVertexAttribPointer(1, sizeof(glm::vec3) / sizeof(GLfloat),
+				GL_FLOAT, GL_FALSE, sizeof(PagVaoData),						//NORMALS
+				((GLubyte *)nullptr + 2 * (sizeof(glm::vec3))));
+
+			glEnableVertexAttribArray(2);
+			glVertexAttribPointer(2, sizeof(glm::vec2) / sizeof(GLfloat),
+				GL_FLOAT, GL_FALSE, sizeof(PagVaoData),						//COORDTEXTS
+				((GLubyte *)nullptr + 3 * (sizeof(glm::vec3))));
+
+			glEnableVertexAttribArray(3);
+			glVertexAttribPointer(3, sizeof(glm::vec3) / sizeof(GLfloat),
+				GL_FLOAT, GL_FALSE, sizeof(PagVaoData),						//TANGET
+				((GLubyte *)nullptr + 4 * (sizeof(glm::vec3))));
+
+			glBufferData(GL_ARRAY_BUFFER, sizeof(PagVaoData) * tamaGeometriaCoordText, pointsColor, GL_STATIC_DRAW);
+
+
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * (tamaIndices), _indices, GL_STATIC_DRAW);
+
+			glBindVertexArray(vao);
+
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, renderer->getTexture(nombreTextura));
+
+			glActiveTexture(GL_TEXTURE1);
+			glBindTexture(GL_TEXTURE_2D, renderer->getTexture(nombreBump));
+
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+			glEnable(GL_PRIMITIVE_RESTART);
+			glPrimitiveRestartIndex(0xFFFF);
+			glDrawElements(GL_TRIANGLE_STRIP, (sizeof(GLuint) * (tamaIndices)) / sizeof(GLuint), GL_UNSIGNED_INT, NULL);
+
+			if (flagBottomTape) {
+				if (!primitivasRellenadas) {
+					glGenVertexArrays(1, &vaoBottomTape);
+					glGenBuffers(1, &vboBottomTape);
+					glGenBuffers(1, &iboBottomTape);
+				}
+
+				glBindVertexArray(vaoBottomTape);
+				glBindBuffer(GL_ARRAY_BUFFER, vboBottomTape);
+
+				glEnableVertexAttribArray(0);
+				glVertexAttribPointer(0, sizeof(glm::vec3) / sizeof(GLfloat),
+					GL_FLOAT, GL_FALSE, sizeof(PagVaoData),						//POSITIONS
+					((GLubyte *)nullptr + (0)));
+
+				glEnableVertexAttribArray(1);
+				glVertexAttribPointer(1, sizeof(glm::vec3) / sizeof(GLfloat),
+					GL_FLOAT, GL_FALSE, sizeof(PagVaoData),						//NORMALS
+					((GLubyte *)nullptr + 2 * (sizeof(glm::vec3))));
+
+				glEnableVertexAttribArray(2);
+				glVertexAttribPointer(2, sizeof(glm::vec2) / sizeof(GLfloat),
+					GL_FLOAT, GL_FALSE, sizeof(PagVaoData),						//COORDTEXTS
+					((GLubyte *)nullptr + 3 * (sizeof(glm::vec3))));
+
+				glEnableVertexAttribArray(3);
+				glVertexAttribPointer(3, sizeof(glm::vec3) / sizeof(GLfloat),
+					GL_FLOAT, GL_FALSE, sizeof(PagVaoData),						//TANGET
+					((GLubyte *)nullptr + 4 * (sizeof(glm::vec3))));
+
+				glBufferData(GL_ARRAY_BUFFER, sizeof(PagVaoData) * (slices + 1), pointsColorBottom, GL_STATIC_DRAW);
+
+				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboBottomTape);
+				glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * (slices + 1), _indicesBottom, GL_STATIC_DRAW);
+
+				glBindVertexArray(vaoBottomTape);
+
+				glActiveTexture(GL_TEXTURE0);
+				glBindTexture(GL_TEXTURE_2D, renderer->getTexture(nombreTextura));
+
+				glActiveTexture(GL_TEXTURE1);
+				glBindTexture(GL_TEXTURE_2D, renderer->getTexture("bump3"));
+
+				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboBottomTape);
+				glDrawElements(GL_TRIANGLE_FAN, (sizeof(GLuint) * (slices + 1)) / sizeof(GLuint), GL_UNSIGNED_INT, NULL);
+			}
+
+			if (flagTopTape) {
+				if (!primitivasRellenadas) {
+					glGenVertexArrays(1, &vaoTopTape);
+					glGenBuffers(1, &vboTopTape);
+					glGenBuffers(1, &iboTopTape);
+				}
+
+				glBindVertexArray(vaoTopTape);
+				glBindBuffer(GL_ARRAY_BUFFER, vboTopTape);
+
+				glEnableVertexAttribArray(0);
+				glVertexAttribPointer(0, sizeof(glm::vec3) / sizeof(GLfloat),
+					GL_FLOAT, GL_FALSE, sizeof(PagVaoData),						//POSITIONS
+					((GLubyte *)nullptr + (0)));
+
+				glEnableVertexAttribArray(1);
+				glVertexAttribPointer(1, sizeof(glm::vec3) / sizeof(GLfloat),
+					GL_FLOAT, GL_FALSE, sizeof(PagVaoData),						//NORMALS
+					((GLubyte *)nullptr + 2 * (sizeof(glm::vec3))));
+
+				glEnableVertexAttribArray(2);
+				glVertexAttribPointer(2, sizeof(glm::vec2) / sizeof(GLfloat),
+					GL_FLOAT, GL_FALSE, sizeof(PagVaoData),						//COORDTEXTS
+					((GLubyte *)nullptr + 3 * (sizeof(glm::vec3))));
+
+				glEnableVertexAttribArray(3);
+				glVertexAttribPointer(3, sizeof(glm::vec3) / sizeof(GLfloat),
+					GL_FLOAT, GL_FALSE, sizeof(PagVaoData),						//TANGET
+					((GLubyte *)nullptr + 4 * (sizeof(glm::vec3))));
+
+				glBufferData(GL_ARRAY_BUFFER, sizeof(PagVaoData) * (slices + 1), pointsColorTop, GL_STATIC_DRAW);
+
+				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboTopTape);
+				glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * (slices + 1), _indicesTop, GL_STATIC_DRAW);
+
+				glBindVertexArray(vaoTopTape);
+
+				glActiveTexture(GL_TEXTURE0);
+				glBindTexture(GL_TEXTURE_2D, renderer->getTexture(nombreTextura));
+
+				glActiveTexture(GL_TEXTURE1);
+				glBindTexture(GL_TEXTURE_2D, renderer->getTexture("bump3"));
 
 				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboTopTape);
 				glDrawElements(GL_TRIANGLE_FAN, (sizeof(GLuint) * (slices + 1)) / sizeof(GLuint), GL_UNSIGNED_INT, NULL);

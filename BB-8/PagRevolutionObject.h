@@ -59,11 +59,12 @@ class PagRevolutionObject: public Pag3DObject{
 
 	//Nombre de la textura que usara
 	std::string nombreTextura;
+	std::string nombreBump;
 public:
 	PagSubdivisionProfile subdivisionProfiles;
 	PagRevolutionObject();
 	PagRevolutionObject(int _numPuntosPerfilOriginal, int _numDivisiones, PuntosPerfil *_perfilOriginal,
-		bool _flagBottomTape, bool _flagTopTape, int _slices, std::string _nombreAlumno, std::string _nombreTextura);
+		bool _flagBottomTape, bool _flagTopTape, int _slices, std::string _nombreAlumno, std::string _nombreTextura, std::string _nombreBump);
 	PagRevolutionObject(Structs::Fichero _fichero);
 	PagRevolutionObject(const PagRevolutionObject &orig);
 	void operator = (const PagRevolutionObject &orig);

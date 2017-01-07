@@ -157,5 +157,11 @@
     <None Include="Texture-S.vert">
       <Filter>Archivos de recursos</Filter>
     </None>
+    <None Include="Bump-P.frag">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="Bump-P.vert">
+      <Filter>Archivos de recursos</Filter>
+    </None>
   </ItemGroup>
 </Project>

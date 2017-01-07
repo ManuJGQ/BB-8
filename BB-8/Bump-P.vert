@@ -5,6 +5,7 @@ layout (location = 1) in vec3 vNormal;
 layout (location = 2) in vec2 vTexCoord;
 layout (location = 3) in vec3 vTangent;
 
+uniform vec3 lightPosition;
 uniform mat4 mvpMatrix;
 uniform mat4 mModelView;
 
@@ -21,6 +22,6 @@ void main() {
 	mat3 TBN = transpose(mat3(tangent, binormal, normal));
 	lDir = normalize(TBN * (lightPosition-position));
 	vDir = normalize(TBN * (-position));
-	texCoord = vTexCoord;
+	texCoord = vec2(vTexCoord.x, 1.0 - vTexCoord.y);
 	gl_Position = mvpMatrix * vec4(vPosition, 1.0);
 }
