@@ -112,9 +112,9 @@ PagRenderer::PagRenderer() {
 
 void PagRenderer::cargarEscena() {
 	//Cargamos las luces
-	lights.push_back(PagLight(glm::vec3(0.0, 100.0, 0.0), 0.2f, 0.2f, 0.3f, glm::vec3(1.0, 1.0, 1.0), 'P', 5.0f));
-	//lights.push_back(PagLight(glm::vec3(100.0, 100.0, 80.0), 0.2f, 0.2f, 0.3f, glm::vec3(1.0, 1.0, 1.0), 'P', 5.0f));
-	//lights.push_back(PagLight(glm::vec3(100.0, 100.0, -80.0), 0.2f, 0.2f, 0.3f, glm::vec3(1.0, 1.0, 1.0), 'P', 5.0f));
+	lights.push_back(PagLight(glm::vec3(0.0, 80.0, 0.0), 0.2f, 0.5f, 0.3f, glm::vec3(1.0, 1.0, 1.0), 'P', 50.0f));
+	lights.push_back(PagLight(glm::vec3(0.0, 20.0, -80.0), 0.2f, 0.5f, 0.3f, glm::vec3(1.0, 1.0, 1.0), 'P', 50.0f));
+	lights.push_back(PagLight(glm::vec3(80.0, 20.0, 0.0), 0.2f, 0.5f, 0.3f, glm::vec3(1.0, 1.0, 1.0), 'P', 50.0f));
 	//lights.push_back(PagLight(glm::vec3(-80.0, 20.0, 0.0), 0.2f, 0.5f, 0.3f, glm::vec3(1.0, 1.0, 1.0), glm::vec3(1.0, 1.0, 1.0), glm::vec3(1.0, 1.0, 1.0), 'P', 50.0f));
 	//lights.push_back(PagLight(glm::vec3(0.0, 20.0, 80.0), 0.2f, 0.5f, 0.3f, glm::vec3(1.0, 1.0, 1.0), glm::vec3(1.0, 1.0, 1.0), glm::vec3(1.0, 1.0, 1.0), 'P', 50.0f));
 

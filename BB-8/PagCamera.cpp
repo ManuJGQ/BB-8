@@ -109,8 +109,8 @@ void PagCamera::girar(double movX, double movY) {
 void PagCamera::movOrbit() {
 	if (!ejecutandoOrbit) {
 		x = 0.0;
-		y = 20.0;
-		z = -60.0;
+		y = 80.0;
+		z = -80.0;
 		xLookAt = 0.0;
 		yLookAt = 0.0;
 		zLookAt = 0.0;
