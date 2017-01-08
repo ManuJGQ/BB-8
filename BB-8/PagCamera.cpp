@@ -11,7 +11,7 @@
  */
 PagCamera::PagCamera() : mouseX(0), mouseY(0), rotates(false), truck(false), orbit(false), ejecutandoOrbit(false), indOrbit(0), zOrbit(0) {
 	x = 0.0;
-	y = 0.0;
+	y = 80.0;
 	z = -80.0;
 	xLookAt = 0.0;
 	yLookAt = 0.0;
@@ -28,7 +28,7 @@ PagCamera::PagCamera() : mouseX(0), mouseY(0), rotates(false), truck(false), orb
 PagCamera::PagCamera(double _x, double _y) : mouseX(512), mouseY(384), rotates(false), truck(false),
 orbit(false), ejecutandoOrbit(false), indOrbit(0), zOrbit(0) {
 	x = 0.0;
-	y = 0.0;
+	y = 80.0;
 	z = -80.0;
 	xLookAt = 0.0;
 	yLookAt = 0.0;
