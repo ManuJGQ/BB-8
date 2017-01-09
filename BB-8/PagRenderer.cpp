@@ -18,7 +18,7 @@ bool has_suffix(const std::string &str, const std::string &suffix) {
 		str.compare(str.size() - suffix.size(), suffix.size(), suffix) == 0;
 }
 
-PagRenderer::PagRenderer() {
+PagRenderer::PagRenderer() : shadowMapWidth(2048), shadowMapHeight(2048) {
 
 	//char* docdir = getenv("userprofile");
 	//std::string path = docdir;
@@ -33,8 +33,8 @@ PagRenderer::PagRenderer() {
 	//ficheroGeom.open(nombreFichero);
 	//ficheroGeom << 13 << "," << 0 << std::endl;
 	////for (float i = 0; i <= 12; i += 0.5) {
-	////	ficheroGeom << i << "," << -1 * sqrt((12 + i)*(12 - i)) << std::endl;
-	////}
+////	ficheroGeom << i << "," << -1 * sqrt((12 + i)*(12 - i)) << std::endl;
+////}
 	//for (float i = 12; i >= 0; i -= 0.5) {
 	//	ficheroGeom << i << "," <<  40 + sqrt((12 + i)*(12 - i)) << std::endl;
 	//}
@@ -43,7 +43,7 @@ PagRenderer::PagRenderer() {
 	// Leemos los datos y txt del usuario
 	int perfiles = 8;
 	/*std::cout << "Introduce el numero de perfiles" << std::endl;
-	std::cin >> perfiles;*/
+std::cin >> perfiles;*/
 
 	ficheros = new Structs::Fichero[perfiles];
 
@@ -59,11 +59,11 @@ PagRenderer::PagRenderer() {
 		if (j == 7)archivo = "b7-in.txt";
 		if (j == 8)archivo = "b8-in.txt";
 		/*std::cout << "Escriba el nombre del fichero " << perfiles - j + 1 << " (con .txt)" << std::endl;
-		std::cin >> archivo;*/
+	std::cin >> archivo;*/
 
 		std::string _nTextura;
 		/*std::cout << "Escriba la textura para " << archivo << " (sin .png)" << std::endl;
-		std::cin >> _nTextura;*/
+	std::cin >> _nTextura;*/
 
 		if (j == 1)_nTextura = "bb8";
 		if (j == 2)_nTextura = "bb8-c2";
@@ -77,7 +77,7 @@ PagRenderer::PagRenderer() {
 
 		std::string _nBump;
 		/*std::cout << "Escriba la textura para " << archivo << " (sin .png)" << std::endl;
-		std::cin >> _nTextura;*/
+	std::cin >> _nTextura;*/
 
 		if (j == 1)_nBump = "bump1e";
 		if (j == 2)_nBump = "bump3";
@@ -100,15 +100,45 @@ PagRenderer::PagRenderer() {
 
 	int slices = 100;
 	/*std::cout << "Escriba el numero de slices" << std::endl;
-	std::cin >> slices;*/
+std::cin >> slices;*/
 
-	for (int i = 0; i < perfiles; i++) {
-		ficheros[i].numSlices = slices;
-	}
+	for (int i = 0; i < perfiles; i++) { ficheros[i].numSlices = slices; }
 
 	//Creamos la jerarquia de objetos
 	objects = Pag3DGroup(ficheros, perfiles);
 }
+
+void PagRenderer::crearFBOShadowsMap() {
+	GLuint depthTex = 0;
+	GLuint shadowFBO = 0;
+
+	GLfloat border[] = { 1.0, 1.0, 1.0, 1.0 };
+
+	glGenTextures(1, &depthTex);
+	glBindTexture(GL_TEXTURE_2D, depthTex);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, shadowMapWidth,
+		shadowMapHeight, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE,
+		NULL);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, border);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LESS);
+
+	glGenFramebuffers(1, &shadowFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, shadowFBO);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+		GL_TEXTURE_2D, depthTex, 0);
+	GLenum result = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+	if (result != GL_FRAMEBUFFER_COMPLETE) {
+		std::cout << "Framebuffer for shadows is not complete" << std::endl;
+	}
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
 
 void PagRenderer::cargarEscena() {
 	//Cargamos las luces
@@ -215,11 +245,17 @@ void PagRenderer::cargarEscena() {
 
 	nombreShader = nombreShaders[s];
 
-	if (nombreShader == "Texture" || nombreShader == "ADS" || nombreShader == "Bump") {
+	if (nombreShader == "Texture" || nombreShader == "ADS" || nombreShader == "Bump" || nombreShader == "Shadow") {
 		for (int i = 0; i < lights.size(); i++) {
 			std::string name = nombreShader + "-";
 			char l = lights[i].light;
 			name += l;
+			PagShaderProgram* shader = new PagShaderProgram();
+			shader->createShaderProgram(name.c_str());
+			shadersUtilizados.push_back(std::pair<std::string, PagShaderProgram*>(name, shader));
+		}
+		if (nombreShader == "Shadow") {
+			std::string name = nombreShader + "-Inicio";
 			PagShaderProgram* shader = new PagShaderProgram();
 			shader->createShaderProgram(name.c_str());
 			shadersUtilizados.push_back(std::pair<std::string, PagShaderProgram*>(name, shader));
@@ -229,17 +265,95 @@ void PagRenderer::cargarEscena() {
 
 void PagRenderer::pintarEscena(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix) {
 
-	glEnable(GLenum(GL_BLEND));
-	glDepthFunc(GLenum(GL_LEQUAL));
+	if (nombreShader == "Texture" || nombreShader == "ADS" || nombreShader == "Bump") {
 
-	for (int i = 0; i < lights.size(); i++) {
+		glEnable(GLenum(GL_BLEND));
+		glDepthFunc(GLenum(GL_LEQUAL));
 
-		if (i == 0) { glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); }
-		else { glBlendFunc(GL_SRC_ALPHA, GL_ONE); }
+		for (int i = 0; i < lights.size(); i++) {
 
-		objects.draw(ViewMatrix, ProjectionMatrix, this, shadersUtilizados[i], &lights[i]);
+			if (i == 0) { glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); }
+			else { glBlendFunc(GL_SRC_ALPHA, GL_ONE); }
+
+			objects.draw(ViewMatrix, ProjectionMatrix, this, shadersUtilizados[i], &lights[i]);
+
+		}
+	}
+	else if (nombreShader == "Shadow") {
+
+		for (int i = 0; i < lights.size(); i++) {
+			if (lights[i].needRecalcShadows) {
+	
+				glBindFramebuffer(GL_FRAMEBUFFER, shadowFBO);
+				glActiveTexture(GL_TEXTURE0);
+				glBindTexture(GL_TEXTURE_2D, depthTex);
+				glClear(GL_DEPTH_BUFFER_BIT);
+				glViewport(0, 0, lights[i].shadowMapWidth, lights[i].shadowMapHeight);
+				glEnable(GL_DEPTH_TEST);
+				glDepthFunc(GL_LESS);
+				glPrimitiveRestartIndex(0xFFFF);
+				glEnable(GL_PRIMITIVE_RESTART);
+				glEnable(GL_CULL_FACE);
+				glCullFace(GL_FRONT);
+
+				objects.draw(ViewMatrix, ProjectionMatrix, this, shadersUtilizados[shadersUtilizados.size() - 1], NULL);
+
+				lights[i].needRecalcShadows = false;
+			}
+		}
+
+		glClearColor(1.0, 1.0, 1.0, 1.0);
+		glEnable(GL_MULTISAMPLE);
+		glEnable(GL_DEPTH_TEST);
+		glPrimitiveRestartIndex(0xFFFF);
+		glEnable(GL_PRIMITIVE_RESTART);
+		glEnable(GL_BLEND);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_BACK);
+		glViewport(0, 0, 1024, 768);
+		shadowBias = glm::mat4(0.5, 0.0, 0.0, 0.0,
+							   0.0, 0.5, 0.0, 0.0,
+							   0.0, 0.0, 0.5, 0.0,
+							   0.5, 0.5, 0.5, 1.0);
+		glDepthFunc(GL_LEQUAL);
+		bool firsLight = true;
+
+		for (int i = 0; i < lights.size(); i++) {
+
+			if (firsLight){
+				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+				firsLight = false;
+			}
+			else {
+				glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+			}
+
+			objects.draw(ViewMatrix, ProjectionMatrix, this, shadersUtilizados[i], &lights[i]);
+
+		}
+
+		nombreShader = "Bump";
+
+		glEnable(GLenum(GL_BLEND));
+		glDepthFunc(GLenum(GL_LEQUAL));
+
+		for (int i = 0; i < lights.size(); i++) {
+
+			if (i == 0) { glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); }
+			else { glBlendFunc(GL_SRC_ALPHA, GL_ONE); }
+
+			objects.draw(ViewMatrix, ProjectionMatrix, this, shadersUtilizados[i], &lights[i]);
+
+		}
+
+		nombreShader = "Shadow";
 
 	}
+	else {
+		objects.draw(ViewMatrix, ProjectionMatrix, this, shadersUtilizados[0], NULL);
+	}
+
 }
 
 PagRenderer::~PagRenderer() {

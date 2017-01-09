@@ -20,7 +20,18 @@ class PagRenderer{
 
 	std::string nombreShader;
 
+	GLuint shadowFBO;
+
+	int shadowMapWidth;
+	int shadowMapHeight;
+
+	void crearFBOShadowsMap();
+
 public:
+	glm::mat4 shadowBias;
+
+	GLuint depthTex;
+
 	PagRenderer();
 	void cargarEscena();
 	void pintarEscena(glm::mat4 ViewMatrix , glm::mat4 ProjectionMatrix);

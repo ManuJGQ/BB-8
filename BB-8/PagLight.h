@@ -26,6 +26,11 @@ public:
 	float y;
 	float s;
 
+	int shadowMapWidth;
+	int shadowMapHeight;
+
+	bool needRecalcShadows;
+
 	PagLight();
 	PagLight(glm::vec3 _positionDirection, float _Ia, float _Id, float _Is,
 		glm::vec3 _Ks, char _light, float _shininess);

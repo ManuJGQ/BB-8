@@ -3,7 +3,7 @@
 PagLight::PagLight(){}
 
 PagLight::PagLight(glm::vec3 _positionDirection, float _Ia, float _Id, float _Is,
-	glm::vec3 _Ks, char _light, float _shininess){
+	glm::vec3 _Ks, char _light, float _shininess): shadowMapWidth(2048), shadowMapHeight(2048), needRecalcShadows(true) {
 
 	if (_light == 'P') {
 
@@ -39,7 +39,7 @@ PagLight::PagLight(glm::vec3 _positionDirection, float _Ia, float _Id, float _Is
 
 
 PagLight::PagLight(glm::vec3 _position, glm::vec3 _direction, float _Ia, float _Id, float _Is,
-	glm::vec3 _Ks, float _y, float _s, float _shininess) {
+	glm::vec3 _Ks, float _y, float _s, float _shininess): shadowMapWidth(2048), shadowMapHeight(2048), needRecalcShadows(true) {
 
 	light = 'S';
 
