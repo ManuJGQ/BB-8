@@ -18,7 +18,7 @@ bool has_suffix(const std::string &str, const std::string &suffix) {
 		str.compare(str.size() - suffix.size(), suffix.size(), suffix) == 0;
 }
 
-PagRenderer::PagRenderer() : shadowMapWidth(2048), shadowMapHeight(2048) {
+PagRenderer::PagRenderer(){
 
 	//char* docdir = getenv("userprofile");
 	//std::string path = docdir;
@@ -108,41 +108,9 @@ std::cin >> slices;*/
 	objects = Pag3DGroup(ficheros, perfiles);
 }
 
-void PagRenderer::crearFBOShadowsMap() {
-	GLuint depthTex = 0;
-	GLuint shadowFBO = 0;
-
-	GLfloat border[] = { 1.0, 1.0, 1.0, 1.0 };
-
-	glGenTextures(1, &depthTex);
-	glBindTexture(GL_TEXTURE_2D, depthTex);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, shadowMapWidth,
-		shadowMapHeight, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE,
-		NULL);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, border);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LESS);
-
-	glGenFramebuffers(1, &shadowFBO);
-	glBindFramebuffer(GL_FRAMEBUFFER, shadowFBO);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
-		GL_TEXTURE_2D, depthTex, 0);
-	GLenum result = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-	if (result != GL_FRAMEBUFFER_COMPLETE) {
-		std::cout << "Framebuffer for shadows is not complete" << std::endl;
-	}
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-}
-
-
 void PagRenderer::cargarEscena() {
 	//Cargamos las luces
-	lights.push_back(PagLight(glm::vec3(0.0, 80.0, 0.0), 0.2f, 0.5f, 0.3f, glm::vec3(1.0, 1.0, 1.0), 'P', 50.0f));
+	lights.push_back(PagLight(glm::vec3(0.0, 50.0, 0.0), 0.2f, 0.5f, 0.3f, glm::vec3(1.0, 1.0, 1.0), 'P', 50.0f));
 	lights.push_back(PagLight(glm::vec3(0.0, 20.0, -80.0), 0.2f, 0.5f, 0.3f, glm::vec3(1.0, 1.0, 1.0), 'P', 50.0f));
 	lights.push_back(PagLight(glm::vec3(80.0, 20.0, 0.0), 0.2f, 0.5f, 0.3f, glm::vec3(1.0, 1.0, 1.0), 'P', 50.0f));
 	//lights.push_back(PagLight(glm::vec3(-80.0, 20.0, 0.0), 0.2f, 0.5f, 0.3f, glm::vec3(1.0, 1.0, 1.0), glm::vec3(1.0, 1.0, 1.0), glm::vec3(1.0, 1.0, 1.0), 'P', 50.0f));
@@ -253,6 +221,7 @@ void PagRenderer::cargarEscena() {
 			PagShaderProgram* shader = new PagShaderProgram();
 			shader->createShaderProgram(name.c_str());
 			shadersUtilizados.push_back(std::pair<std::string, PagShaderProgram*>(name, shader));
+			if (nombreShader == "Shadow")lights[i].crearFBOShadowsMap(textures.size() + i);
 		}
 		if (nombreShader == "Shadow") {
 			std::string name = nombreShader + "-Inicio";
@@ -284,9 +253,9 @@ void PagRenderer::pintarEscena(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix)
 		for (int i = 0; i < lights.size(); i++) {
 			if (lights[i].needRecalcShadows) {
 	
-				glBindFramebuffer(GL_FRAMEBUFFER, shadowFBO);
-				glActiveTexture(GL_TEXTURE0);
-				glBindTexture(GL_TEXTURE_2D, depthTex);
+				glBindFramebuffer(GL_FRAMEBUFFER, lights[i].shadowFBO);
+				glActiveTexture(GL_TEXTURE2);
+				glBindTexture(GL_TEXTURE_2D, lights[i].depthTex);
 				glClear(GL_DEPTH_BUFFER_BIT);
 				glViewport(0, 0, lights[i].shadowMapWidth, lights[i].shadowMapHeight);
 				glEnable(GL_DEPTH_TEST);
@@ -296,7 +265,7 @@ void PagRenderer::pintarEscena(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix)
 				glEnable(GL_CULL_FACE);
 				glCullFace(GL_FRONT);
 
-				objects.draw(ViewMatrix, ProjectionMatrix, this, shadersUtilizados[shadersUtilizados.size() - 1], NULL);
+				objects.draw(ViewMatrix, ProjectionMatrix, this, shadersUtilizados[lights.size()], NULL);
 
 				lights[i].needRecalcShadows = false;
 			}
@@ -329,26 +298,10 @@ void PagRenderer::pintarEscena(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix)
 				glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 			}
 
+			depthTex = lights[i].depthTex;
 			objects.draw(ViewMatrix, ProjectionMatrix, this, shadersUtilizados[i], &lights[i]);
 
 		}
-
-		nombreShader = "Bump";
-
-		glEnable(GLenum(GL_BLEND));
-		glDepthFunc(GLenum(GL_LEQUAL));
-
-		for (int i = 0; i < lights.size(); i++) {
-
-			if (i == 0) { glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); }
-			else { glBlendFunc(GL_SRC_ALPHA, GL_ONE); }
-
-			objects.draw(ViewMatrix, ProjectionMatrix, this, shadersUtilizados[i], &lights[i]);
-
-		}
-
-		nombreShader = "Shadow";
-
 	}
 	else {
 		objects.draw(ViewMatrix, ProjectionMatrix, this, shadersUtilizados[0], NULL);

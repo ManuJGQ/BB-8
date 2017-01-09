@@ -2,15 +2,15 @@
 
 PagTable::PagTable(){
 	PuntosPerfil pointsTable[11] = {{ 0,0 },
-									{ 3,0 },
-									{ 6,0 },
-									{ 9,0 },
-									{ 12,0 },
-									{ 15,1 },
-									{ 12,1 },
-									{ 9,1 },
-									{ 6,1 },
-									{ 3,1 },
+									{ 30,0 },
+									{ 60,0 },
+									{ 90,0 },
+									{ 120,0 },
+									{ 150,1 },
+									{ 120,1 },
+									{ 90,1 },
+									{ 60,1 },
+									{ 30,1 },
 									{ 0,1 }};
 	table = PagRevolutionObject(11, 0, pointsTable, true, true, 100, "mesa", "tronco", "bump3");
 }

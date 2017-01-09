@@ -1,17 +1,19 @@
 #version 400
 
 in vec3 position;
-in vec3 normal;
+in vec3 lDir;
+in vec3 vDir;
+in vec2 texCoord;
 in vec4 shadowCoord;
 
-uniform vec3 lightPosition;
-uniform vec3 Ka;
-uniform vec3 Kd;
 uniform vec3 Ks;
 uniform vec3 Ia;
 uniform vec3 Id;
 uniform vec3 Is;
 uniform float Shininess;
+
+uniform sampler2D TexSamplerColor;
+uniform sampler2D TexSamplerBump;
 
 uniform float shadowMin;
 uniform sampler2DShadow shadowMap;
@@ -34,20 +36,28 @@ float shadowFactor() {
 	return shadowFactor;
 }
 
-vec3 ads() {
-	vec3 n;
+vec3 ads(vec4 texColor, vec4 normal) {
+	vec3 n = normal.rgb;
 	if (gl_FrontFacing){
-		n = normalize( normal );
+		n = normalize( n );
 	}else{
-		n = normalize( -normal );
+		n = normalize( -n );
 	}
-	vec3 l = normalize( lightPosition-position );
-	vec3 v = normalize( -position );
+
+	vec3 Kad = texColor.rgb;
+
+	vec3 l = normalize( lDir );
+	vec3 v = normalize( vDir );
 	vec3 r = reflect( -l, n );
-	vec3 ambient = (Ia * Ka);
-	vec3 diffuse = (Id * Kd * max( dot(l,n), 0.0));
+
+	vec3 ambient = (Ia * Kad);
+	vec3 diffuse = (Id * Kad * max( dot(l,n), 0.0));
 	vec3 specular;
-	specular = (Is * Ks * pow( max( dot(r,v), 0.0), Shininess));
+	if (dot(l,n) < 0.0){
+		specular = vec3(0.0);
+	}else{
+		specular = (Is * Ks * pow( max( dot(r,v), 0.0), Shininess));
+	}
 
 	float shadowFact = shadowFactor();
 	float shadowMul4Specular;
@@ -62,5 +72,7 @@ vec3 ads() {
 }
 
 void main() {
-	FragColor = vec4(ads(), 1.0);
+	vec4 texColor = texture(TexSamplerColor, texCoord);
+	vec4 normal = (2.0 * texture(TexSamplerBump, texCoord)) - 1.0;
+	FragColor = vec4(ads(texColor, normal), 1.0);
 }

@@ -26,8 +26,13 @@ public:
 	float y;
 	float s;
 
+	GLuint shadowFBO;
+	GLuint depthTex;
+
 	int shadowMapWidth;
 	int shadowMapHeight;
+
+	void crearFBOShadowsMap(GLuint n);
 
 	bool needRecalcShadows;
 

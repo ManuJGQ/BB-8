@@ -1,4 +1,5 @@
 #include "PagLight.h"
+#include <iostream>
 
 PagLight::PagLight(){}
 
@@ -60,6 +61,15 @@ PagLight::PagLight(glm::vec3 _position, glm::vec3 _direction, float _Ia, float _
 }
 
 PagLight::PagLight(const PagLight & orig) {
+	shadowFBO = orig.shadowFBO;
+	depthTex = orig.depthTex;
+
+	shadowMapWidth = orig.shadowMapWidth;
+	shadowMapHeight = orig.shadowMapHeight;
+
+
+	needRecalcShadows = needRecalcShadows;
+	
 	light = orig.light;
 	if (light == 'S') {
 		position = orig.position;
@@ -104,6 +114,37 @@ PagLight::PagLight(const PagLight & orig) {
 
 void PagLight::operator=(const PagLight & orig){
 	*this = orig;
+}
+
+void PagLight::crearFBOShadowsMap(GLuint n) {
+	GLuint depthTex = n;
+	GLuint shadowFBO = 0;
+
+	GLfloat border[] = { 1.0, 1.0, 1.0, 1.0 };
+
+	glGenTextures(n + 1, &depthTex);
+	glBindTexture(GL_TEXTURE_2D, depthTex);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, shadowMapWidth,
+		shadowMapHeight, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE,
+		NULL);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, border);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LESS);
+
+	glGenFramebuffers(1, &shadowFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, shadowFBO);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+		GL_TEXTURE_2D, depthTex, 0);
+	GLenum result = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+	if (result != GL_FRAMEBUFFER_COMPLETE) {
+		std::cout << "Framebuffer for shadows is not complete" << std::endl;
+	}
+	glBindFramebuffer(GL_FRAMEBUFFER, 0 );
 }
 
 PagLight::~PagLight(){}

@@ -1461,13 +1461,13 @@ void PagRevolutionObject::draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix,
 				shader->setUniform("mShadowMatrix", renderer->shadowBias * ProjectionMatrix * ViewMatrix * ModelMatrix);
 				shader->setUniform("lightPosition", glm::vec3(ViewMatrix * glm::vec4(light->position, 1.0)));
 				if (!shader->getUniformsRealizados()) {
-					shader->setUniform("Ka", material.getKa());
-					shader->setUniform("Kd", material.getKd());
 					shader->setUniform("Ks", light->Ks);
 					shader->setUniform("Ia", light->Ia * glm::vec3(1.0, 1.0, 1.0));
 					shader->setUniform("Id", light->Id * glm::vec3(1.0, 1.0, 1.0));
 					shader->setUniform("Is", light->Is * glm::vec3(1.0, 1.0, 1.0));
 					shader->setUniform("Shininess", light->shininess);
+					shader->setUniform("shadowMin", 0.1f);
+					shader->setUniform("shadowMap", 2);
 					shader->setUniform("TexSamplerColor", 0);
 					shader->setUniform("TexSamplerBump", 1);
 
@@ -1535,6 +1535,16 @@ void PagRevolutionObject::draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix,
 				GL_FLOAT, GL_FALSE, sizeof(PagVaoData),						//NORMALS
 				((GLubyte *)nullptr + 2 * (sizeof(glm::vec3))));
 
+			glEnableVertexAttribArray(2);
+			glVertexAttribPointer(2, sizeof(glm::vec2) / sizeof(GLfloat),
+				GL_FLOAT, GL_FALSE, sizeof(PagVaoData),						//COORDTEXTS
+				((GLubyte *)nullptr + 3 * (sizeof(glm::vec3))));
+
+			glEnableVertexAttribArray(3);
+			glVertexAttribPointer(3, sizeof(glm::vec3) / sizeof(GLfloat),
+				GL_FLOAT, GL_FALSE, sizeof(PagVaoData),						//TANGET
+				((GLubyte *)nullptr + 4 * (sizeof(glm::vec3))));
+
 			glBufferData(GL_ARRAY_BUFFER, sizeof(PagVaoData) * tamaGeometriaCoordText, pointsColor, GL_STATIC_DRAW);
 
 
@@ -1544,6 +1554,12 @@ void PagRevolutionObject::draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix,
 			glBindVertexArray(vao);
 
 			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, renderer->getTexture(nombreTextura));
+
+			glActiveTexture(GL_TEXTURE1);
+			glBindTexture(GL_TEXTURE_2D, renderer->getTexture(nombreBump));
+
+			glActiveTexture(GL_TEXTURE2);
 			glBindTexture(GL_TEXTURE_2D, renderer->depthTex);
 
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
@@ -1571,6 +1587,16 @@ void PagRevolutionObject::draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix,
 					GL_FLOAT, GL_FALSE, sizeof(PagVaoData),						//NORMALS
 					((GLubyte *)nullptr + 2 * (sizeof(glm::vec3))));
 
+				glEnableVertexAttribArray(2);
+				glVertexAttribPointer(2, sizeof(glm::vec2) / sizeof(GLfloat),
+					GL_FLOAT, GL_FALSE, sizeof(PagVaoData),						//COORDTEXTS
+					((GLubyte *)nullptr + 3 * (sizeof(glm::vec3))));
+
+				glEnableVertexAttribArray(3);
+				glVertexAttribPointer(3, sizeof(glm::vec3) / sizeof(GLfloat),
+					GL_FLOAT, GL_FALSE, sizeof(PagVaoData),						//TANGET
+					((GLubyte *)nullptr + 4 * (sizeof(glm::vec3))));
+
 				glBufferData(GL_ARRAY_BUFFER, sizeof(PagVaoData) * (slices + 1), pointsColorBottom, GL_STATIC_DRAW);
 
 				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboBottomTape);
@@ -1579,6 +1605,12 @@ void PagRevolutionObject::draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix,
 				glBindVertexArray(vaoBottomTape);
 
 				glActiveTexture(GL_TEXTURE0);
+				glBindTexture(GL_TEXTURE_2D, renderer->getTexture(nombreTextura));
+
+				glActiveTexture(GL_TEXTURE1);
+				glBindTexture(GL_TEXTURE_2D, renderer->getTexture("bump3"));
+
+				glActiveTexture(GL_TEXTURE2);
 				glBindTexture(GL_TEXTURE_2D, renderer->depthTex);
 
 				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboBottomTape);
@@ -1605,6 +1637,16 @@ void PagRevolutionObject::draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix,
 					GL_FLOAT, GL_FALSE, sizeof(PagVaoData),						//NORMALS
 					((GLubyte *)nullptr + 2 * (sizeof(glm::vec3))));
 
+				glEnableVertexAttribArray(2);
+				glVertexAttribPointer(2, sizeof(glm::vec2) / sizeof(GLfloat),
+					GL_FLOAT, GL_FALSE, sizeof(PagVaoData),						//COORDTEXTS
+					((GLubyte *)nullptr + 3 * (sizeof(glm::vec3))));
+
+				glEnableVertexAttribArray(3);
+				glVertexAttribPointer(3, sizeof(glm::vec3) / sizeof(GLfloat),
+					GL_FLOAT, GL_FALSE, sizeof(PagVaoData),						//TANGET
+					((GLubyte *)nullptr + 4 * (sizeof(glm::vec3))));
+
 				glBufferData(GL_ARRAY_BUFFER, sizeof(PagVaoData) * (slices + 1), pointsColorTop, GL_STATIC_DRAW);
 
 				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboTopTape);
@@ -1613,6 +1655,12 @@ void PagRevolutionObject::draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix,
 				glBindVertexArray(vaoTopTape);
 
 				glActiveTexture(GL_TEXTURE0);
+				glBindTexture(GL_TEXTURE_2D, renderer->getTexture(nombreTextura));
+
+				glActiveTexture(GL_TEXTURE1);
+				glBindTexture(GL_TEXTURE_2D, renderer->getTexture("bump3"));
+
+				glActiveTexture(GL_TEXTURE2);
 				glBindTexture(GL_TEXTURE_2D, renderer->depthTex);
 
 				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboTopTape);
