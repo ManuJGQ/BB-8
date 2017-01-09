@@ -79,9 +79,9 @@ PagRenderer::PagRenderer() {
 		/*std::cout << "Escriba la textura para " << archivo << " (sin .png)" << std::endl;
 		std::cin >> _nTextura;*/
 
-		if (j == 1)_nBump = "bump1";
+		if (j == 1)_nBump = "bump1e";
 		if (j == 2)_nBump = "bump3";
-		if (j == 3)_nBump = "bump2";
+		if (j == 3)_nBump = "bump2b";
 		if (j == 4)_nBump = "bump3";
 		if (j == 5)_nBump = "bump3";
 		if (j == 6)_nBump = "bump3";
