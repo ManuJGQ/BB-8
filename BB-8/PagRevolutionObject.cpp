@@ -18,17 +18,20 @@ coordtextBottomTape(nullptr), coordtextTopTape(nullptr), indices(nullptr), indic
 indicesTopTape(nullptr), slices(0), tamaGeometriaCoordText(0), tamaIndices(0),
 pointsColor(nullptr), pointsColorBottom(nullptr), pointsColorTop(nullptr), _indices(nullptr), _indicesTop(nullptr),
 _indicesBottom(nullptr), primitivasRellenadas(false), material() {
+	ModelMatrix = glm::mat4(1.0);
 };
 
 /**
  * Constructor parametrizado de PagRevolutionObject
  */
 PagRevolutionObject::PagRevolutionObject(int _numPuntosPerfilOriginal, int _numDivisiones, PuntosPerfil *_perfilOriginal,
-	bool _flagBottomTape, bool _flagTopTape, int _slices, std::string _nombreAlumno, std::string _nombreTextura, std::string _nombreBump) : flagBottomTape(false), flagTopTape(false),
-	geometria(nullptr), geometriaBottomTape(nullptr), geometriaTopTape(nullptr), coordtext(nullptr), coordtextBottomTape(nullptr),
-	coordtextTopTape(nullptr), indices(nullptr), indicesBottomTape(nullptr), indicesTopTape(nullptr),
-	tamaGeometriaCoordText(0), tamaIndices(0), pointsColor(nullptr), pointsColorBottom(nullptr), pointsColorTop(nullptr),
-	_indices(nullptr), _indicesTop(nullptr), _indicesBottom(nullptr), primitivasRellenadas(false), nombreAlumno(_nombreAlumno), nombreTextura(_nombreTextura), nombreBump(_nombreBump), material() {
+	bool _flagBottomTape, bool _flagTopTape, int _slices, std::string _nombreAlumno, std::string _nombreTextura, std::string _nombreBump, std::string _nombreSemiTransparente) : material(), flagBottomTape(false),
+	flagTopTape(false), geometria(nullptr), geometriaBottomTape(nullptr), geometriaTopTape(nullptr), coordtext(nullptr),
+	coordtextBottomTape(nullptr), coordtextTopTape(nullptr), indices(nullptr), indicesBottomTape(nullptr),
+	indicesTopTape(nullptr), tamaGeometriaCoordText(0), tamaIndices(0), pointsColor(nullptr), pointsColorBottom(nullptr),
+	pointsColorTop(nullptr), _indices(nullptr), _indicesTop(nullptr), _indicesBottom(nullptr), primitivasRellenadas(false), nombreAlumno(_nombreAlumno), nombreTextura(_nombreTextura), nombreBump(_nombreBump), nombreSemiTrasnparente(_nombreSemiTransparente) {
+
+	ModelMatrix = glm::mat4(1.0);
 
 	flagBottomTape = _flagBottomTape;
 	flagTopTape = _flagTopTape;
@@ -74,6 +77,8 @@ void PagRevolutionObject::operator=(const PagRevolutionObject & orig) {
 	nombreTextura = orig.nombreTextura;
 	material = orig.material;
 	nombreBump = orig.nombreBump;
+	nombreSemiTrasnparente = orig.nombreSemiTrasnparente;
+	ModelMatrix = orig.ModelMatrix;
 
 	if (orig.geometria != nullptr) {
 		geometria = new Geometria[tamaGeometriaCoordText];
@@ -1001,6 +1006,7 @@ void PagRevolutionObject::draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix,
 					shader->setUniform("Is", light->Is * glm::vec3(1.0, 1.0, 1.0));
 					shader->setUniform("Shininess", light->shininess);
 					shader->setUniform("TexSamplerColor", 0);
+					shader->setUniform("TexSamplerGraffiti", 3);
 
 					shader->setUniformsRealizados(true);
 				}
@@ -1017,6 +1023,7 @@ void PagRevolutionObject::draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix,
 					shader->setUniform("Is", light->Is * glm::vec3(1.0, 1.0, 1.0));
 					shader->setUniform("Shininess", light->shininess);
 					shader->setUniform("TexSamplerColor", 0);
+					shader->setUniform("TexSamplerGraffiti", 3);
 
 					shader->setUniformsRealizados(true);
 				}
@@ -1037,6 +1044,7 @@ void PagRevolutionObject::draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix,
 					shader->setUniform("y", light->y);
 					shader->setUniform("s", light->s);
 					shader->setUniform("TexSamplerColor", 0);
+					shader->setUniform("TexSamplerGraffiti", 3);
 
 					shader->setUniformsRealizados(true);
 				}
@@ -1076,6 +1084,9 @@ void PagRevolutionObject::draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix,
 
 			glActiveTexture(GL_TEXTURE0);
 			glBindTexture(GL_TEXTURE_2D, renderer->getTexture(nombreTextura));
+
+			glActiveTexture(GL_TEXTURE3);
+			glBindTexture(GL_TEXTURE_2D, renderer->getTexture(nombreSemiTrasnparente));
 
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 			glEnable(GL_PRIMITIVE_RESTART);
@@ -1117,6 +1128,9 @@ void PagRevolutionObject::draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix,
 				glActiveTexture(GL_TEXTURE0);
 				glBindTexture(GL_TEXTURE_2D, renderer->getTexture(nombreTextura));
 
+				glActiveTexture(GL_TEXTURE3);
+				glBindTexture(GL_TEXTURE_2D, renderer->getTexture(nombreSemiTrasnparente));
+
 				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboBottomTape);
 				glDrawElements(GL_TRIANGLE_FAN, (sizeof(GLuint) * (slices + 1)) / sizeof(GLuint), GL_UNSIGNED_INT, NULL);
 			}
@@ -1157,6 +1171,9 @@ void PagRevolutionObject::draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix,
 				glActiveTexture(GL_TEXTURE0);
 				glBindTexture(GL_TEXTURE_2D, renderer->getTexture(nombreTextura));
 
+				glActiveTexture(GL_TEXTURE3);
+				glBindTexture(GL_TEXTURE_2D, renderer->getTexture(nombreSemiTrasnparente));
+
 				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboTopTape);
 				glDrawElements(GL_TRIANGLE_FAN, (sizeof(GLuint) * (slices + 1)) / sizeof(GLuint), GL_UNSIGNED_INT, NULL);
 			}
@@ -1183,6 +1200,7 @@ void PagRevolutionObject::draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix,
 					shader->setUniform("Shininess", light->shininess);
 					shader->setUniform("TexSamplerColor", 0);
 					shader->setUniform("TexSamplerBump", 1);
+					shader->setUniform("TexSamplerGraffiti", 3);
 
 					shader->setUniformsRealizados(true);
 				}
@@ -1202,6 +1220,8 @@ void PagRevolutionObject::draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix,
 					shader->setUniform("Is", light->Is * glm::vec3(1.0, 1.0, 1.0));
 					shader->setUniform("Shininess", light->shininess);
 					shader->setUniform("TexSamplerColor", 0);
+					shader->setUniform("TexSamplerBump", 1);
+					shader->setUniform("TexSamplerGraffiti", 3);
 
 					shader->setUniformsRealizados(true);
 				}
@@ -1226,6 +1246,7 @@ void PagRevolutionObject::draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix,
 					shader->setUniform("s", light->s);
 					shader->setUniform("TexSamplerColor", 0);
 					shader->setUniform("TexSamplerBump", 1);
+					shader->setUniform("TexSamplerGraffiti", 3);
 
 					shader->setUniformsRealizados(true);
 				}
@@ -1274,6 +1295,9 @@ void PagRevolutionObject::draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix,
 			glActiveTexture(GL_TEXTURE1);
 			glBindTexture(GL_TEXTURE_2D, renderer->getTexture(nombreBump));
 
+			glActiveTexture(GL_TEXTURE3);
+			glBindTexture(GL_TEXTURE_2D, renderer->getTexture(nombreSemiTrasnparente));
+
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 			glEnable(GL_PRIMITIVE_RESTART);
 			glPrimitiveRestartIndex(0xFFFF);
@@ -1322,6 +1346,9 @@ void PagRevolutionObject::draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix,
 				glActiveTexture(GL_TEXTURE1);
 				glBindTexture(GL_TEXTURE_2D, renderer->getTexture("bump3"));
 
+				glActiveTexture(GL_TEXTURE3);
+				glBindTexture(GL_TEXTURE_2D, renderer->getTexture(nombreSemiTrasnparente));
+
 				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboBottomTape);
 				glDrawElements(GL_TRIANGLE_FAN, (sizeof(GLuint) * (slices + 1)) / sizeof(GLuint), GL_UNSIGNED_INT, NULL);
 			}
@@ -1368,6 +1395,9 @@ void PagRevolutionObject::draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix,
 
 				glActiveTexture(GL_TEXTURE1);
 				glBindTexture(GL_TEXTURE_2D, renderer->getTexture("bump3"));
+
+				glActiveTexture(GL_TEXTURE3);
+				glBindTexture(GL_TEXTURE_2D, renderer->getTexture(nombreSemiTrasnparente));
 
 				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboTopTape);
 				glDrawElements(GL_TRIANGLE_FAN, (sizeof(GLuint) * (slices + 1)) / sizeof(GLuint), GL_UNSIGNED_INT, NULL);

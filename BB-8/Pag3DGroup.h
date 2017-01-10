@@ -24,6 +24,11 @@ public:
 	void setModelMatrix(glm::mat4 _ModelMatrix, int element) {
 			dynamic_cast<PagRevolutionObject*>(elements[numObjects - element])->setModelMatrix(_ModelMatrix);
 	}
+	void setOwnModelMatrix(glm::mat4 _ModelMatrix) {
+		for (int i = 1; i < numObjects; i++) {
+			dynamic_cast<PagRevolutionObject*>(elements[i])->setModelMatrix(_ModelMatrix);
+		}
+	}
 
 	~Pag3DGroup();
 };

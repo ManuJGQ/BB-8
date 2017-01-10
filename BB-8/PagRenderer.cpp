@@ -19,31 +19,8 @@ bool has_suffix(const std::string &str, const std::string &suffix) {
 }
 
 PagRenderer::PagRenderer(){
-
-	//char* docdir = getenv("userprofile");
-	//std::string path = docdir;
-	//path += "/Desktop/";
-	//std::string nombreFichero;
-
-	////ARCHIVO GEOMETRIA
-
-	//nombreFichero = path;
-	//nombreFichero += "b3-in.txt";
-	//std::ofstream ficheroGeom;
-	//ficheroGeom.open(nombreFichero);
-	//ficheroGeom << 13 << "," << 0 << std::endl;
-	////for (float i = 0; i <= 12; i += 0.5) {
-////	ficheroGeom << i << "," << -1 * sqrt((12 + i)*(12 - i)) << std::endl;
-////}
-	//for (float i = 12; i >= 0; i -= 0.5) {
-	//	ficheroGeom << i << "," <<  40 + sqrt((12 + i)*(12 - i)) << std::endl;
-	//}
-	//ficheroGeom.close();
-
 	// Leemos los datos y txt del usuario
 	int perfiles = 8;
-	/*std::cout << "Introduce el numero de perfiles" << std::endl;
-std::cin >> perfiles;*/
 
 	ficheros = new Structs::Fichero[perfiles];
 
@@ -58,12 +35,8 @@ std::cin >> perfiles;*/
 		if (j == 6)archivo = "b6-in.txt";
 		if (j == 7)archivo = "b7-in.txt";
 		if (j == 8)archivo = "b8-in.txt";
-		/*std::cout << "Escriba el nombre del fichero " << perfiles - j + 1 << " (con .txt)" << std::endl;
-	std::cin >> archivo;*/
 
 		std::string _nTextura;
-		/*std::cout << "Escriba la textura para " << archivo << " (sin .png)" << std::endl;
-	std::cin >> _nTextura;*/
 
 		if (j == 1)_nTextura = "bb8";
 		if (j == 2)_nTextura = "bb8-c2";
@@ -76,12 +49,10 @@ std::cin >> perfiles;*/
 
 
 		std::string _nBump;
-		/*std::cout << "Escriba la textura para " << archivo << " (sin .png)" << std::endl;
-	std::cin >> _nTextura;*/
 
-		if (j == 1)_nBump = "bump1e";
+		if (j == 1)_nBump = "bump1";
 		if (j == 2)_nBump = "bump3";
-		if (j == 3)_nBump = "bump2b";
+		if (j == 3)_nBump = "bump2";
 		if (j == 4)_nBump = "bump3";
 		if (j == 5)_nBump = "bump3";
 		if (j == 6)_nBump = "bump3";
@@ -94,23 +65,74 @@ std::cin >> perfiles;*/
 		_fichero.archivoIN = archivo;
 		_fichero.nTextura = _nTextura;
 		_fichero.nBump = _nBump;
+		_fichero.nSemiTrasnparente = "Limpio";
 		ficheros[perfiles - j] = _fichero;
 		j--;
 	}
 
 	int slices = 100;
-	/*std::cout << "Escriba el numero de slices" << std::endl;
-std::cin >> slices;*/
 
 	for (int i = 0; i < perfiles; i++) { ficheros[i].numSlices = slices; }
 
 	//Creamos la jerarquia de objetos
 	objects = Pag3DGroup(ficheros, perfiles);
+
+	j = perfiles;
+	while (j != 0) {
+		std::string archivo;
+		if (j == 1)archivo = "b1-in.txt";
+		if (j == 2)archivo = "b2-in.txt";
+		if (j == 3)archivo = "b3-in.txt";
+		if (j == 4)archivo = "b4-in.txt";
+		if (j == 5)archivo = "b5-in.txt";
+		if (j == 6)archivo = "b6-in.txt";
+		if (j == 7)archivo = "b7-in.txt";
+		if (j == 8)archivo = "b8-in.txt";
+
+		std::string _nTextura;
+
+		if (j == 1)_nTextura = "bb8";
+		if (j == 2)_nTextura = "bb8-c2";
+		if (j == 3)_nTextura = "bb8-ca";
+		if (j == 4)_nTextura = "bb8-ca-top";
+		if (j == 5)_nTextura = "bb8-eye";
+		if (j == 6)_nTextura = "bb8-eye";
+		if (j == 7)_nTextura = "bb8-eye";
+		if (j == 8)_nTextura = "bb8-eye";
+
+
+		std::string _nBump;
+
+		if (j == 1)_nBump = "bump1";
+		if (j == 2)_nBump = "bump3";
+		if (j == 3)_nBump = "bump2";
+		if (j == 4)_nBump = "bump3";
+		if (j == 5)_nBump = "bump3";
+		if (j == 6)_nBump = "bump3";
+		if (j == 7)_nBump = "bump3";
+		if (j == 8)_nBump = "bump3";
+
+
+		Structs::Fichero _fichero;
+		_fichero.nombreAlumno = archivo;
+		_fichero.archivoIN = archivo;
+		_fichero.nTextura = _nTextura;
+		_fichero.nBump = _nBump;
+		_fichero.nSemiTrasnparente = "Suciedad";
+		ficheros[perfiles - j] = _fichero;
+		j--;
+	}
+
+	for (int i = 0; i < perfiles; i++) { ficheros[i].numSlices = slices; }
+
+	//Creamos la jerarquia de objetos
+	objects2 = Pag3DGroup(ficheros, perfiles);
 }
 
 void PagRenderer::cargarEscena() {
 	//Cargamos las luces
-	lights.push_back(PagLight(glm::vec3(-30.0, 30.0, -50.0), glm::vec3(0.46, -0.46, 0.75), 0.2f, 0.5f, 0.3f, glm::vec3(1.0, 1.0, 1.0), 20.0f, 5.0f, 50.0f));
+	lights.push_back(PagLight(glm::vec3(0.46, -0.46, 0.75), 0.2f, 0.5f, 0.3f, glm::vec3(1.0, 1.0, 1.0), 'D', 50.0f));
+	//lights.push_back(PagLight(glm::vec3(-30.0, 30.0, -50.0), glm::vec3(0.46, -0.46, 0.75), 0.2f, 0.5f, 0.3f, glm::vec3(1.0, 1.0, 1.0), 20.0f, 5.0f, 50.0f));
 	//lights.push_back(PagLight(glm::vec3(0.0, 40.0, 80.0), 0.2f, 0.5f, 0.3f, glm::vec3(1.0, 1.0, 1.0), 'P', 50.0f));
 	//lights.push_back(PagLight(glm::vec3(-80.0, 40.0, -80.0), 0.2f, 0.5f, 0.3f, glm::vec3(1.0, 1.0, 1.0), 'P', 50.0f));
 	//lights.push_back(PagLight(glm::vec3(80.0, 40.0, -80.0), 0.2f, 0.5f, 0.3f, glm::vec3(1.0, 1.0, 1.0), 'P', 50.0f));
@@ -119,6 +141,20 @@ void PagRenderer::cargarEscena() {
 
 	//Creamos las Geometrias y Topologias de los diferentes objetos que componen la escena
 	objects.createObject();
+	objects2.createObject();
+
+	glm::mat4 ModelMatrix4(1.0);
+
+	ModelMatrix4 *= glm::translate(glm::mat4(), glm::vec3(-30.0f, 0.0f, 0.0f));
+
+	objects.setOwnModelMatrix(ModelMatrix4);
+
+	glm::mat4 ModelMatrix5(1.0);
+
+	ModelMatrix5 *= glm::translate(glm::mat4(), glm::vec3(30.0f, 0.0f, 0.0f));
+
+	objects2.setOwnModelMatrix(ModelMatrix5);
+
 
 	glm::mat4 ModelMatrix(1.0);
 
@@ -131,6 +167,7 @@ void PagRenderer::cargarEscena() {
 	ModelMatrix *= glm::translate(glm::mat4(), glm::vec3(0.0f, -2.0f, 0.0f));
 
 	objects.setModelMatrix(ModelMatrix, 5);
+	objects2.setModelMatrix(ModelMatrix, 5);
 
 	glm::mat4 ModelMatrix2(1.0);
 
@@ -143,12 +180,14 @@ void PagRenderer::cargarEscena() {
 	ModelMatrix2 *= glm::translate(glm::mat4(), glm::vec3(0.0f, -2.0f, 0.0f));
 
 	objects.setModelMatrix(ModelMatrix2, 6);
+	objects2.setModelMatrix(ModelMatrix2, 6);
 
 	glm::mat4 ModelMatrix3(1.0);
 
 	ModelMatrix3 *= glm::translate(glm::mat4(), glm::vec3(-2.0f, -0.5f, 2.0f));
 
 	objects.setModelMatrix(ModelMatrix3, 8);
+	objects2.setModelMatrix(ModelMatrix3, 8);
 
 	//Cargamos todas las Texturas del directorio Textures
 
@@ -162,6 +201,8 @@ void PagRenderer::cargarEscena() {
 			int ind = name.find_last_of(".");
 			std::string nombreSinExt = name.substr(0, ind);
 			std::string path = "Textures/" + name;
+
+			std::cout << path << std::endl;
 
 			textures.insert_or_assign(nombreSinExt, PagTexture(path, GLuint(textures.size())));
 		}
@@ -258,7 +299,7 @@ void PagRenderer::pintarEscena(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix)
 			else { glBlendFunc(GL_SRC_ALPHA, GL_ONE); }
 
 			objects.draw(ViewMatrix, ProjectionMatrix, this, shadersUtilizados[i], &lights[i], i);
-
+			objects2.draw(ViewMatrix, ProjectionMatrix, this, shadersUtilizados[i], &lights[i], i);
 		}
 	}
 	else if (nombreShader == "Shadow") {
@@ -279,6 +320,7 @@ void PagRenderer::pintarEscena(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix)
 				glCullFace(GL_FRONT);
 
 				objects.draw(ViewMatrix, ProjectionMatrix, this, shadersUtilizados[lights.size()], NULL, lights.size());
+				objects2.draw(ViewMatrix, ProjectionMatrix, this, shadersUtilizados[lights.size()], NULL, lights.size());
 
 				lights[i].needRecalcShadows = false;
 			}
@@ -313,12 +355,13 @@ void PagRenderer::pintarEscena(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix)
 
 			depthTex = lights[i].depthTex;
 			objects.draw(ViewMatrix, ProjectionMatrix, this, shadersUtilizados[i], &lights[i], i);
-			std::cout << "PINTO" << std::endl;
+			objects2.draw(ViewMatrix, ProjectionMatrix, this, shadersUtilizados[i], &lights[i], i);
 
 		}
 	}
 	else {
 		objects.draw(ViewMatrix, ProjectionMatrix, this, shadersUtilizados[0], NULL, 0);
+		objects2.draw(ViewMatrix, ProjectionMatrix, this, shadersUtilizados[0], NULL, 0);
 	}
 
 }

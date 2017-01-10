@@ -17,7 +17,7 @@ PagCamera::PagCamera() : mouseX(0), mouseY(0), rotates(false), truck(false), orb
 	yLookAt = 0.0;
 	zLookAt = 0.0;
 	fovY = 45.0f;
-	ProjectionMatrix *= glm::perspective(fovY, 4.0f / 3.0f, 0.1f, 2000.f);
+	ProjectionMatrix *= glm::perspective(fovY, 4.0f / 3.0f, 0.1f, 10000.f);
 	ViewMatrix *= glm::lookAt(glm::vec3(x, y, z),
 		glm::vec3(xLookAt, yLookAt, zLookAt), glm::vec3(0.0, 1.0, 0.0));
 }
@@ -34,7 +34,7 @@ orbit(false), ejecutandoOrbit(false), indOrbit(0), zOrbit(0) {
 	yLookAt = 0.0;
 	zLookAt = 0.0;
 	fovY = 45.0f;
-	ProjectionMatrix *= glm::perspective(fovY, 4.0f / 3.0f, 0.1f, 2000.f);
+	ProjectionMatrix *= glm::perspective(fovY, 4.0f / 3.0f, 0.1f, 10000.f);
 	ViewMatrix *= glm::lookAt(glm::vec3(x, y, z),
 		glm::vec3(xLookAt, yLookAt, zLookAt), glm::vec3(0.0, 1.0, 0.0));
 }
@@ -115,7 +115,7 @@ void PagCamera::movOrbit() {
 		yLookAt = 0.0;
 		zLookAt = 0.0;
 		fovY = 45.0f;
-		ProjectionMatrix = glm::perspective(fovY, 4.0f / 3.0f, 0.1f, 200.f);
+		ProjectionMatrix = glm::perspective(fovY, 4.0f / 3.0f, 0.1f, 10000.f);
 		ViewMatrix = glm::lookAt(glm::vec3(x, y, z),
 			glm::vec3(xLookAt, yLookAt, zLookAt), glm::vec3(0.0, 1.0, 0.0));
 		ejecutandoOrbit = true;
@@ -144,7 +144,7 @@ void PagCamera::resetCamera() {
 	yLookAt = 0.0;
 	zLookAt = 0.0;
 	fovY = 45.0f;
-	ProjectionMatrix = glm::perspective(fovY, 4.0f / 3.0f, 0.1f, 2000.f);
+	ProjectionMatrix = glm::perspective(fovY, 4.0f / 3.0f, 0.1f, 10000.f);
 	ViewMatrix = glm::lookAt(glm::vec3(x, y, z),
 		glm::vec3(xLookAt, yLookAt, zLookAt), glm::vec3(0.0, 1.0, 0.0));
 	ejecutandoOrbit = false;

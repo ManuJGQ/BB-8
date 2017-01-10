@@ -12,6 +12,7 @@ uniform vec3 Is;
 uniform float Shininess;
 
 uniform sampler2D TexSamplerColor;
+uniform sampler2D TexSamplerGraffiti;
 
 layout (location = 0) out vec4 FragColor;
 
@@ -41,6 +42,8 @@ vec3 ads(vec4 texColor){
 }
 
 void main() {
-	vec4 texColor = texture(TexSamplerColor, texCoord);
+	vec4 textura = texture(TexSamplerColor, texCoord);
+	vec4 graffiti = texture(TexSamplerGraffiti, texCoord);
+	vec4 texColor = mix(textura, graffiti, graffiti.a);
 	FragColor = vec4(ads(texColor), 1.0);
 }

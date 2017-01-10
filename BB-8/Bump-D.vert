@@ -20,7 +20,7 @@ void main() {
 	vec3 tangent = vec3( mModelView * vec4(vTangent, 0.0) );
 	vec3 binormal = normalize(cross(normal, tangent));
 	mat3 TBN = transpose(mat3(tangent, binormal, normal));
-	lDir = normalize(TBN * (-lightPosition));
+	lDir = normalize(TBN * (-lightDirection));
 	vDir = normalize(TBN * (-position));
 	texCoord = vec2(vTexCoord.x, 1.0 - vTexCoord.y);
 	gl_Position = mvpMatrix * vec4(vPosition, 1.0);

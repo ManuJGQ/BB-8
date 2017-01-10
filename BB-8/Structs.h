@@ -37,6 +37,7 @@ namespace Structs {
 		int numSlices;
 		std::string nombreAlumno;
 		std::string nTextura;
+		std::string nSemiTrasnparente;
 		std::string nBump;
 	};
 

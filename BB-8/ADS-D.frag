@@ -21,7 +21,7 @@ vec3 ads(){
 	}else{
 		n = normalize( -normal );
 	}
-	vec3 l = normalize( lightDirection );
+	vec3 l = normalize( -lightDirection );
 	vec3 v = normalize( -position );
 	vec3 r = reflect( -l, n );
 	vec3 ambient = (Ia * Ka);

@@ -12,6 +12,7 @@
 
 class PagRenderer{
 	Pag3DGroup objects;
+	Pag3DGroup objects2;
 
 	std::vector<std::pair<std::string, PagShaderProgram*>> shadersUtilizados;
 
