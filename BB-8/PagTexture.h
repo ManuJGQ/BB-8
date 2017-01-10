@@ -15,13 +15,6 @@ public:
 	PagTexture(std::string imgPath, GLuint _texture);
 	GLuint getTexture() { return texture; }
 
-	/*PagTexture operator< (const PagTexture &orig) {
-		if (texture < orig.texture) {
-			return *this;
-		}
-		return orig;
-	}*/
-
 	~PagTexture();
 };
 

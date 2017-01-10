@@ -131,13 +131,9 @@ PagRenderer::PagRenderer(){
 
 void PagRenderer::cargarEscena() {
 	//Cargamos las luces
-	lights.push_back(PagLight(glm::vec3(0.46, -0.46, 0.75), 0.2f, 0.5f, 0.3f, glm::vec3(1.0, 1.0, 1.0), 'D', 50.0f));
-	//lights.push_back(PagLight(glm::vec3(-30.0, 30.0, -50.0), glm::vec3(0.46, -0.46, 0.75), 0.2f, 0.5f, 0.3f, glm::vec3(1.0, 1.0, 1.0), 20.0f, 5.0f, 50.0f));
-	//lights.push_back(PagLight(glm::vec3(0.0, 40.0, 80.0), 0.2f, 0.5f, 0.3f, glm::vec3(1.0, 1.0, 1.0), 'P', 50.0f));
-	//lights.push_back(PagLight(glm::vec3(-80.0, 40.0, -80.0), 0.2f, 0.5f, 0.3f, glm::vec3(1.0, 1.0, 1.0), 'P', 50.0f));
-	//lights.push_back(PagLight(glm::vec3(80.0, 40.0, -80.0), 0.2f, 0.5f, 0.3f, glm::vec3(1.0, 1.0, 1.0), 'P', 50.0f));
-	//lights.push_back(PagLight(glm::vec3(-80.0, 20.0, 0.0), 0.2f, 0.5f, 0.3f, glm::vec3(1.0, 1.0, 1.0), glm::vec3(1.0, 1.0, 1.0), glm::vec3(1.0, 1.0, 1.0), 'P', 50.0f));
-	//lights.push_back(PagLight(glm::vec3(0.0, 20.0, 80.0), 0.2f, 0.5f, 0.3f, glm::vec3(1.0, 1.0, 1.0), glm::vec3(1.0, 1.0, 1.0), glm::vec3(1.0, 1.0, 1.0), 'P', 50.0f));
+	lights.push_back(PagLight(glm::vec3(30.0, 90.0, -90.0), glm::vec3(-0.23, -0.69, 0.69), 0.2f, 0.5f, 0.3f, glm::vec3(1.0, 1.0, 1.0), 20.0f, 5.0f, 50.0f));
+	lights.push_back(PagLight(glm::vec3(60.0, 90.0, 0.0), 0.1f, 0.125f, 0.075f, glm::vec3(1.0, 1.0, 1.0), 'P', 50.0f));
+	lights.push_back(PagLight(glm::vec3(-60.0, 90.0, 0.0), 0.1f, 0.125f, 0.075f, glm::vec3(1.0, 1.0, 1.0), 'P', 50.0f));
 
 	//Creamos las Geometrias y Topologias de los diferentes objetos que componen la escena
 	objects.createObject();
@@ -202,8 +198,6 @@ void PagRenderer::cargarEscena() {
 			std::string nombreSinExt = name.substr(0, ind);
 			std::string path = "Textures/" + name;
 
-			std::cout << path << std::endl;
-
 			textures.insert_or_assign(nombreSinExt, PagTexture(path, GLuint(textures.size())));
 		}
 	}
@@ -221,13 +215,9 @@ void PagRenderer::cargarEscena() {
 	while ((entryS = readdir(dirS)) != nullptr) {
 		if (has_suffix(entryS->d_name, ".frag")) {
 
-			//std::cout << entryS->d_name << std::endl;
-
 			entryS = readdir(dirS);
 
 			if (has_suffix(entryS->d_name, ".vert")) {
-
-				//std::cout << entryS->d_name << std::endl;
 
 				std::string name = std::string(entryS->d_name);
 				int ind = name.find_last_of(".");

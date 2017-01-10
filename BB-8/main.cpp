@@ -43,7 +43,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	}
 	if (key == GLFW_KEY_O && action == GLFW_RELEASE) {
 		camera.setOrbit(false);
-		//camera.resetCamera();
+		camera.resetCamera();
 	}
 	if (key == GLFW_KEY_UP && action == GLFW_REPEAT) {
 		if(camera.getTruck()) camera.mover(0.0, 0.0, 1.0);
@@ -118,7 +118,7 @@ int main(int argc, char** argv) {
 	escena.cargarEscena();
 	glfwShowWindow(window);
 
-	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glEnable(GL_PROGRAM_POINT_SIZE);
 	glViewport(0, 0, 1024, 768);
 
