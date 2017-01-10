@@ -20,8 +20,8 @@ void PagTable::createObject(){
 }
 
 
-void PagTable::draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix, PagRenderer* renderer, std::pair<std::string, PagShaderProgram*> shader, PagLight* light){
-	table.draw(ViewMatrix, ProjectionMatrix, renderer, shader, light);
+void PagTable::draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix, PagRenderer* renderer, std::pair<std::string, PagShaderProgram*> shader, PagLight* light, int ns){
+	table.draw(ViewMatrix, ProjectionMatrix, renderer, shader, light, ns);
 }
 
 PagTable::PagTable(const PagTable & orig){

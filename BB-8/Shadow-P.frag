@@ -66,8 +66,9 @@ vec3 ads(vec4 texColor, vec4 normal) {
 	} else {
 		shadowMul4Specular = 1.0;
 	}
-	vec3 color = ambient +
-	shadowFact * (diffuse + (shadowMul4Specular * specular));
+
+	vec3 color = (ambient +
+	shadowFact * (diffuse + (shadowMul4Specular * specular))) * 0 + shadowFact;
 	return color;
 }
 

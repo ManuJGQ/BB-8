@@ -110,9 +110,10 @@ std::cin >> slices;*/
 
 void PagRenderer::cargarEscena() {
 	//Cargamos las luces
-	lights.push_back(PagLight(glm::vec3(0.0, 50.0, 0.0), 0.2f, 0.5f, 0.3f, glm::vec3(1.0, 1.0, 1.0), 'P', 50.0f));
-	lights.push_back(PagLight(glm::vec3(0.0, 20.0, -80.0), 0.2f, 0.5f, 0.3f, glm::vec3(1.0, 1.0, 1.0), 'P', 50.0f));
-	lights.push_back(PagLight(glm::vec3(80.0, 20.0, 0.0), 0.2f, 0.5f, 0.3f, glm::vec3(1.0, 1.0, 1.0), 'P', 50.0f));
+	lights.push_back(PagLight(glm::vec3(-30.0, 30.0, -50.0), glm::vec3(0.46, -0.46, 0.75), 0.2f, 0.5f, 0.3f, glm::vec3(1.0, 1.0, 1.0), 20.0f, 5.0f, 50.0f));
+	//lights.push_back(PagLight(glm::vec3(0.0, 40.0, 80.0), 0.2f, 0.5f, 0.3f, glm::vec3(1.0, 1.0, 1.0), 'P', 50.0f));
+	//lights.push_back(PagLight(glm::vec3(-80.0, 40.0, -80.0), 0.2f, 0.5f, 0.3f, glm::vec3(1.0, 1.0, 1.0), 'P', 50.0f));
+	//lights.push_back(PagLight(glm::vec3(80.0, 40.0, -80.0), 0.2f, 0.5f, 0.3f, glm::vec3(1.0, 1.0, 1.0), 'P', 50.0f));
 	//lights.push_back(PagLight(glm::vec3(-80.0, 20.0, 0.0), 0.2f, 0.5f, 0.3f, glm::vec3(1.0, 1.0, 1.0), glm::vec3(1.0, 1.0, 1.0), glm::vec3(1.0, 1.0, 1.0), 'P', 50.0f));
 	//lights.push_back(PagLight(glm::vec3(0.0, 20.0, 80.0), 0.2f, 0.5f, 0.3f, glm::vec3(1.0, 1.0, 1.0), glm::vec3(1.0, 1.0, 1.0), glm::vec3(1.0, 1.0, 1.0), 'P', 50.0f));
 
@@ -221,7 +222,19 @@ void PagRenderer::cargarEscena() {
 			PagShaderProgram* shader = new PagShaderProgram();
 			shader->createShaderProgram(name.c_str());
 			shadersUtilizados.push_back(std::pair<std::string, PagShaderProgram*>(name, shader));
-			if (nombreShader == "Shadow")lights[i].crearFBOShadowsMap(textures.size() + i);
+			lights[i].crearFBOShadowsMap(i, textures.size() + i);
+		}
+		if(nombreShader == "Bump") {
+			nombreShader = "Texture";
+			for (int i = 0; i < lights.size(); i++) {
+				std::string name = nombreShader + "-";
+				char l = lights[i].light;
+				name += l;
+				PagShaderProgram* shader = new PagShaderProgram();
+				shader->createShaderProgram(name.c_str());
+				shadersUtilizadosAux.push_back(std::pair<std::string, PagShaderProgram*>(name, shader));
+			}
+			nombreShader = "Bump";
 		}
 		if (nombreShader == "Shadow") {
 			std::string name = nombreShader + "-Inicio";
@@ -244,7 +257,7 @@ void PagRenderer::pintarEscena(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix)
 			if (i == 0) { glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); }
 			else { glBlendFunc(GL_SRC_ALPHA, GL_ONE); }
 
-			objects.draw(ViewMatrix, ProjectionMatrix, this, shadersUtilizados[i], &lights[i]);
+			objects.draw(ViewMatrix, ProjectionMatrix, this, shadersUtilizados[i], &lights[i], i);
 
 		}
 	}
@@ -265,7 +278,7 @@ void PagRenderer::pintarEscena(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix)
 				glEnable(GL_CULL_FACE);
 				glCullFace(GL_FRONT);
 
-				objects.draw(ViewMatrix, ProjectionMatrix, this, shadersUtilizados[lights.size()], NULL);
+				objects.draw(ViewMatrix, ProjectionMatrix, this, shadersUtilizados[lights.size()], NULL, lights.size());
 
 				lights[i].needRecalcShadows = false;
 			}
@@ -299,12 +312,13 @@ void PagRenderer::pintarEscena(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix)
 			}
 
 			depthTex = lights[i].depthTex;
-			objects.draw(ViewMatrix, ProjectionMatrix, this, shadersUtilizados[i], &lights[i]);
+			objects.draw(ViewMatrix, ProjectionMatrix, this, shadersUtilizados[i], &lights[i], i);
+			std::cout << "PINTO" << std::endl;
 
 		}
 	}
 	else {
-		objects.draw(ViewMatrix, ProjectionMatrix, this, shadersUtilizados[0], NULL);
+		objects.draw(ViewMatrix, ProjectionMatrix, this, shadersUtilizados[0], NULL, 0);
 	}
 
 }

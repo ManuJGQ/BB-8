@@ -558,7 +558,7 @@ void PagRevolutionObject::createObject() {
 /**
  * Funcion encargada de pintar el PagRevolutionObject en todos los modos posibles
  */
-void PagRevolutionObject::draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix, PagRenderer* renderer, std::pair<std::string, PagShaderProgram*> _shader, PagLight* light) {
+void PagRevolutionObject::draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix, PagRenderer* renderer, std::pair<std::string, PagShaderProgram*> _shader, PagLight* light, int ns) {
 	std::string nShader = _shader.first;
 
 	if (nShader == "points" || nShader == "pointsMultiColor") {
@@ -1161,14 +1161,17 @@ void PagRevolutionObject::draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix,
 				glDrawElements(GL_TRIANGLE_FAN, (sizeof(GLuint) * (slices + 1)) / sizeof(GLuint), GL_UNSIGNED_INT, NULL);
 			}
 		}
-		if (nShader == "Bump-P" || nShader == "Bump-P" || nShader == "Bump-P") {
+		if (nShader == "Bump-P" || nShader == "Bump-D" || nShader == "Bump-S") {
 			char l = light->light;
 			PagShaderProgram* shader = _shader.second;
 
 			shader->use();
 
 			if (l == 'P') {
-
+				if (nombreBump == "bump3") {
+					draw(ViewMatrix, ProjectionMatrix, renderer, renderer->shadersUtilizadosAux[ns], light, ns);
+					return;
+				}
 				shader->setUniform("mvpMatrix", ProjectionMatrix * ViewMatrix * ModelMatrix);
 				shader->setUniform("mModelView", ViewMatrix * ModelMatrix);
 				shader->setUniform("lightPosition", glm::vec3(ViewMatrix * glm::vec4(light->position, 1.0)));
@@ -1185,7 +1188,10 @@ void PagRevolutionObject::draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix,
 				}
 			}
 			else if (l == 'D') {
-
+				if (nombreBump == "bump3") {
+					draw(ViewMatrix, ProjectionMatrix, renderer, renderer->shadersUtilizadosAux[ns], light, ns);
+					return;
+				}
 				shader->setUniform("mvpMatrix", ProjectionMatrix * ViewMatrix * ModelMatrix);
 				shader->setUniform("mModelView", ViewMatrix * ModelMatrix);
 				shader->setUniform("lightDirection", glm::vec3(ViewMatrix * glm::vec4(light->direction, 0.0)));
@@ -1201,7 +1207,10 @@ void PagRevolutionObject::draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix,
 				}
 			}
 			else if (l == 'S') {
-
+				if (nombreBump == "bump3") {
+					draw(ViewMatrix, ProjectionMatrix, renderer, renderer->shadersUtilizadosAux[ns], light, ns);
+					return;
+				}
 				shader->setUniform("mvpMatrix", ProjectionMatrix * ViewMatrix * ModelMatrix);
 				shader->setUniform("mModelView", ViewMatrix * ModelMatrix);
 				shader->setUniform("lightPosition", glm::vec3(ViewMatrix * glm::vec4(light->position, 1.0)));
@@ -1216,6 +1225,7 @@ void PagRevolutionObject::draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix,
 					shader->setUniform("y", light->y);
 					shader->setUniform("s", light->s);
 					shader->setUniform("TexSamplerColor", 0);
+					shader->setUniform("TexSamplerBump", 1);
 
 					shader->setUniformsRealizados(true);
 				}
@@ -1466,8 +1476,8 @@ void PagRevolutionObject::draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix,
 					shader->setUniform("Id", light->Id * glm::vec3(1.0, 1.0, 1.0));
 					shader->setUniform("Is", light->Is * glm::vec3(1.0, 1.0, 1.0));
 					shader->setUniform("Shininess", light->shininess);
-					shader->setUniform("shadowMin", 0.1f);
-					shader->setUniform("shadowMap", 2);
+					shader->setUniform("shadowMin", 0.8f);
+					shader->setUniform("shadowMap", 0);
 					shader->setUniform("TexSamplerColor", 0);
 					shader->setUniform("TexSamplerBump", 1);
 
@@ -1559,7 +1569,7 @@ void PagRevolutionObject::draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix,
 			glActiveTexture(GL_TEXTURE1);
 			glBindTexture(GL_TEXTURE_2D, renderer->getTexture(nombreBump));
 
-			glActiveTexture(GL_TEXTURE2);
+			glActiveTexture(GL_TEXTURE0);
 			glBindTexture(GL_TEXTURE_2D, renderer->depthTex);
 
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
@@ -1610,7 +1620,7 @@ void PagRevolutionObject::draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix,
 				glActiveTexture(GL_TEXTURE1);
 				glBindTexture(GL_TEXTURE_2D, renderer->getTexture("bump3"));
 
-				glActiveTexture(GL_TEXTURE2);
+				glActiveTexture(GL_TEXTURE0);
 				glBindTexture(GL_TEXTURE_2D, renderer->depthTex);
 
 				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboBottomTape);
@@ -1660,7 +1670,7 @@ void PagRevolutionObject::draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix,
 				glActiveTexture(GL_TEXTURE1);
 				glBindTexture(GL_TEXTURE_2D, renderer->getTexture("bump3"));
 
-				glActiveTexture(GL_TEXTURE2);
+				glActiveTexture(GL_TEXTURE0);
 				glBindTexture(GL_TEXTURE_2D, renderer->depthTex);
 
 				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboTopTape);

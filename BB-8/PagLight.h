@@ -32,7 +32,7 @@ public:
 	int shadowMapWidth;
 	int shadowMapHeight;
 
-	void crearFBOShadowsMap(GLuint n);
+	void crearFBOShadowsMap(GLuint m, GLuint n);
 
 	bool needRecalcShadows;
 

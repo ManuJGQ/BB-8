@@ -116,13 +116,13 @@ void PagLight::operator=(const PagLight & orig){
 	*this = orig;
 }
 
-void PagLight::crearFBOShadowsMap(GLuint n) {
-	GLuint depthTex = n;
-	GLuint shadowFBO = 0;
+void PagLight::crearFBOShadowsMap(GLuint m, GLuint n) {
+	depthTex = 0;
+	shadowFBO = 0;
 
 	GLfloat border[] = { 1.0, 1.0, 1.0, 1.0 };
 
-	glGenTextures(n + 1, &depthTex);
+	glGenTextures(1, &depthTex);
 	glBindTexture(GL_TEXTURE_2D, depthTex);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, shadowMapWidth,
 		shadowMapHeight, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE,

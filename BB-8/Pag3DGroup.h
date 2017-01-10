@@ -13,7 +13,7 @@ class Pag3DGroup : public Pag3DElement {
 	int numObjects;
 	glm::mat4 ModelMatrix;
 public:
-	void draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix, PagRenderer* renderer, std::pair<std::string, PagShaderProgram*> shader, PagLight* light) override;
+	void draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix, PagRenderer* renderer, std::pair<std::string, PagShaderProgram*> shader, PagLight* light, int ns) override;
 	void createObject() override;
 	Pag3DGroup();
 	Pag3DGroup(Structs::Fichero ficheros[], int _numObjects);

@@ -14,6 +14,7 @@ class PagRenderer{
 	Pag3DGroup objects;
 
 	std::vector<std::pair<std::string, PagShaderProgram*>> shadersUtilizados;
+
 	std::map<std::string, PagTexture> textures;
 	std::vector<PagLight> lights;
 	Structs::Fichero *ficheros;
@@ -21,6 +22,9 @@ class PagRenderer{
 	std::string nombreShader;
 
 public:
+
+	std::vector<std::pair<std::string, PagShaderProgram*>> shadersUtilizadosAux;
+
 	glm::mat4 shadowBias;
 
 	GLuint depthTex;

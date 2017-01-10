@@ -11,7 +11,7 @@ class PagRenderer;
 class Pag3DElement{
 	glm::mat4 ModelMatrix;
 public:
-	virtual void draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix, PagRenderer* renderer, std::pair<std::string,PagShaderProgram*> shader, PagLight* light) = 0;
+	virtual void draw(glm::mat4 ViewMatrix, glm::mat4 ProjectionMatrix, PagRenderer* renderer, std::pair<std::string,PagShaderProgram*> shader, PagLight* light, int ns) = 0;
 	virtual void createObject() = 0;
 	Pag3DElement();
 	virtual ~Pag3DElement();

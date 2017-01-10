@@ -1,7 +1,9 @@
 #version 400
 
 in vec3 position;
-in vec3 normal;
+in vec3 lDir;
+in vec3 vDir;
+in vec3 dDir;
 in vec2 texCoord;
 
 uniform vec3 lightPosition;
@@ -16,23 +18,26 @@ uniform float y;
 uniform float s;
 
 uniform sampler2D TexSamplerColor;
+uniform sampler2D TexSamplerBump;
 
 layout (location = 0) out vec4 FragColor;
 
-vec3 ads(vec4 texColor){
-	vec3 n;
+vec3 ads(vec4 texColor, vec4 normal){
+	vec3 n = normal.rgb;
 	if (gl_FrontFacing){
-		n = normalize( normal );
+		n = normalize( n );
 	}else{
-		n = normalize( -normal );
+		n = normalize( -n );
 	}
 
 	vec3 Kad = texColor.rgb;
 
-	vec3 l = normalize( lightPosition-position );
-	vec3 v = normalize( -position );
+	vec3 l = normalize( lDir );
+	vec3 v = normalize( vDir );
+	vec3 d = normalize( dDir );
+	vec3 L = normalize( lightPosition-position );
 	vec3 r = reflect( -l, n );
-	vec3 d = normalize( lightDirection );
+
 	vec3 ambient = (Ia * Kad);
 	vec3 diffuse = (Id * Kad * max( dot(l,n), 0.0));
 	vec3 specular;
@@ -43,7 +48,7 @@ vec3 ads(vec4 texColor){
 	}
 	float sf;
 	float Y = (y * 3.14) / 180;
-	if(dot(-l,lightDirection) >= cos(Y)){
+	if(dot(-L,lightDirection) >= cos(Y)){
 		sf = pow( dot(-l,d), s);
 	}else{
 		sf = 0;
@@ -53,5 +58,6 @@ vec3 ads(vec4 texColor){
 
 void main() {
 	vec4 texColor = texture(TexSamplerColor, texCoord);
-	FragColor = vec4(ads(texColor), 1.0);
+	vec4 normal = (2.0 * texture(TexSamplerBump, texCoord)) - 1.0;
+	FragColor = vec4(ads(texColor, normal), 1.0);
 }

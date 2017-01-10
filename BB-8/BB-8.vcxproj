@@ -168,8 +168,12 @@
     <None Include="ADS-P.vert" />
     <None Include="ADS-S.frag" />
     <None Include="ADS-S.vert" />
+    <None Include="Bump-D.frag" />
+    <None Include="Bump-D.vert" />
     <None Include="Bump-P.frag" />
     <None Include="Bump-P.vert" />
+    <None Include="Bump-S.frag" />
+    <None Include="Bump-S.vert" />
     <None Include="points.frag" />
     <None Include="points.vert" />
     <None Include="pointsMultiColor.frag" />

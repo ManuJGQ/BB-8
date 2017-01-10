@@ -175,5 +175,17 @@
     <None Include="Shadow-P.vert">
       <Filter>Archivos de recursos</Filter>
     </None>
+    <None Include="Bump-D.frag">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="Bump-D.vert">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="Bump-S.frag">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="Bump-S.vert">
+      <Filter>Archivos de recursos</Filter>
+    </None>
   </ItemGroup>
 </Project>
